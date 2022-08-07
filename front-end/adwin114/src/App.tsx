@@ -1,30 +1,26 @@
+/* eslint-disable */
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import ModalSmall from './basement/ModalSmall';
+import ModalRegular from './basement/ModalRegular';
+import ScreenSize from "./components/Debug/ScreenSize"
+import Header from 'components/Layout/Header';
+import Cover from 'components/Layout/Cover';
+import Introduction from 'components/Layout/Introduction';
+import Footer from 'components/Layout/Footer';
 
-function App() {
+export default function App() {
     return (
         <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo"/>
-                <p>
-                    Edit 
-                    <code> src/App.js </code> 
-                    and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    Learn React
-                </a>
-                <h1 className="text-3xl font-italic underline">
-                        Hello world!
-                    </h1>
-            </header>
+            <ScreenSize/>
+            <Header/>
+            <Cover/>
+            <Introduction/>
+            <Footer/>
+                <div className="">
+                    <div className="">랜딩div</div>
+                    <div className="">광고div</div>
+                </div> 
         </div>
     );
 }
-
-export default App;
