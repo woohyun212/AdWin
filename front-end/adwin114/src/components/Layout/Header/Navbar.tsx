@@ -33,20 +33,20 @@ export default function Navbar({fixed} : any) {
 
                     <ul className="flex flex-col lg:flex-row list-none mr-auto">
                         <li className="nav-item">
-                            <Item title="분양홍보" href="/"/>
+                            <Item title="분양홍보" href="/" addClass="px-6 py-2"/>
                         </li>
                         <li className="nav-item">
-                            <Item title="분양상담사 모집" href="/"/>
+                            <Item title="분양상담사 모집" href="/" addClass="px-6 py-2"/>
                         </li>
                         <li className="nav-item">
-                            <Item title="커뮤니티" href="/"/>
+                            <Item title="커뮤니티" href="/" addClass="px-6 py-2"/>
                         </li>
                         <li className="nav-item">
-                            <Item title="뉴스" href="/"/>
+                            <Item title="뉴스" href="/" addClass="px-6 py-2"/>
                         </li>
                     </ul>
-                    <Item title="로그인" href="/"/>
-                    <Item title="회원가입" href="/" addClass="border rounded-lg"/>
+                    <Item title="로그인" href="/" addClass="px-3 py-2"/>
+                    <Item title="회원가입" href="/" addClass="border rounded-lg px-3 py-2"/>
                 </div>
             </div>
         </nav>
@@ -65,7 +65,7 @@ function Item({
 } : Props) {
     return (
         <a
-            className={"px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-whit" +
+            className={"flex items-center text-xs uppercase font-bold leading-snug text-whit" +
                     "e hover:opacity-75 " + addClass}
             href={href}>
             <span className="">{title}</span>

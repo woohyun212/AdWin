@@ -10,7 +10,7 @@ import Footer from 'components/Layout/Footer';
 
 export default function App() {
     return (
-        <div className="App">
+        <div className="App bg-fixed bg-blend-darken bg-no-repeat bg-cover bg-center bg-[url('images/pedro-lastra.jpg')] bg-black/50">
             <ScreenSize/>
             <Header/>
             <Cover/>

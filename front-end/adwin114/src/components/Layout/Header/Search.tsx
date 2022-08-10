@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export default function Search() {
     return (
@@ -7,7 +9,7 @@ export default function Search() {
             <div className="flex">
                 <span
                     className="font-normal leading-snug flex text-center white-space-no-wrap border border-solid border-indigo-600 rounded-full text-sm bg-indigo-100 items-center rounded-r-none pl-2 py-1 text-indigo-800 border-r-0 placeholder-indigo-300">
-                    <i className="fas fa-search"></i>
+                    <FontAwesomeIcon icon={faSearch}/>
                 </span>
             </div>
             <input
