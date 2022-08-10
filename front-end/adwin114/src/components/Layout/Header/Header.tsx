@@ -1,10 +1,9 @@
 import React from 'react';
-import Nav from './Nav';
-
+import Navbar from './Navbar'
 export default function Header() {
     return (
-        <header>
-            <Nav/>
+        <header className='top-0 absolute z-50 w-full flex flex-wrap items-center justify-between'>
+            <Navbar/>
         </header>
     )
 }
