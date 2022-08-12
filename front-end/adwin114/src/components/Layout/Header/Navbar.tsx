@@ -7,7 +7,7 @@ export default function Navbar({fixed} : any) {
     const [navbarOpen, setNavbarOpen] = React.useState(false);
     return (
         <nav
-            className="relative w-full flex flex-wrap items-center justify-between border-b border-b-slate-300 bg-transparent">
+            className="w-full flex flex-wrap items-center justify-between border-b border-b-slate-300 bg-transparent">
             <div
                 className="container px-4 mx-auto flex flex-wrap items-center justify-between">
                 <div
@@ -65,7 +65,7 @@ function Item({
 } : Props) {
     return (
         <a
-            className={"flex items-center text-xs uppercase font-bold leading-snug text-whit" +
+            className={"flex items-center text-base uppercase font-bold leading-snug text-whit" +
                     "e hover:opacity-75 " + addClass}
             href={href}>
             <span className="">{title}</span>

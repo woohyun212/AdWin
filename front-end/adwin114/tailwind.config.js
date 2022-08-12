@@ -6,17 +6,19 @@ module.exports = {
     extend: {
       backgroundImage: {
         'hero-pattern': "url('/images/pedro-lastra.jpg')",
-        'footer-texture': "url('/img/footer-texture.png')",
+        // 'footer-texture': "url('/img/footer-texture.png')",
+      },
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-3deg)' },
+          '50%': { transform: 'rotate(3deg)' },
+        }
+      },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+        wiggle: 'wiggle 1s ease-in-out infinite'
+      }
       }
     },
-    // opacity: {
-    //   '0': '0',
-    //   '20': '0.2',
-    //   '40': '0.4',
-    //   '60': '0.6',
-    //   '80': '0.8',
-    //   '100': '1',
-    // }
-  },
   plugins: [],
 }

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react';
-import './App.css';
+import './assets/css/App.css';
 import ScreenSize from "./components/Debug/ScreenSize"
 import Header from 'components/Layout/Header';
 import Cover from 'components/Layout/Cover';
