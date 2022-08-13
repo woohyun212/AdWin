@@ -3,12 +3,10 @@ import 'images/pedro-lastra.jpg';
 import Search from './Search';
 import {ReactComponent as OfficeBuilding} from 'images/office-building.svg'
 import {ReactComponent as Annotation} from 'images/annotation.svg'
-import {ReactComponent as Building} from 'images/building.svg'
-import {ReactComponent as SpeechBubble} from 'images/speech_bubble.svg'
 import {ReactComponent as Newspaper} from 'images/newspaper.svg'
-import {ReactComponent as MagnifyingGlass} from 'images/MagnifyingGlass.svg'
-import Carousel_1 from './Carousel_1'
-import Carousel_2 from './Carousel_2'
+import Carousel1 from './Carousel/Carousel1'
+import Carousel2 from './Carousel/Carousel2'
+import Carousel3 from './Carousel/Carousel3'
 
 export default function Cover() {
     return (
@@ -38,22 +36,30 @@ export default function Cover() {
                 </div>
             </section>
 
-            <section className="snap-end h-screen w-screen card bg-slate-400 text-black">
+            <section
+                className="snap-end h-screen w-screen flex flex-col justify-center items-center bg-white text-black py-[14.3vh]">
+                <span className='flex font-bold text-2xl mb-[5vh]'>분양 광고</span>
                 <div
-                    className='flex flex-col gap-3 h-[80vh] w-[80vh] border-4 border-red-400 mx-auto my-[10vh]'>
-                    <div className='flex flex-row border-2 gap-2 border-yellow-400 h-2/5'>
-                        <Carousel_1/>
-                        {/* <Carousel_2/> */}
+                    className='flex flex-col gap-[1vw] h-[65vh] w-[65vh] mx-auto drop-shadow-2xl'>
+                    <div className='flex flex-row gap-[1vw] h-[40.5%]'>
+                        <Carousel1/>
+                        <Carousel2/>
                     </div>
-                    <div className='flex border-2 border-yellow-400 h-3/5'></div>
+                    <div className='flex h-[57.5%] '>
+                        <Carousel3/>
+                    </div>
+                    <a
+                        className='flex bg-orange-400 font-bold justify-center w-1/4 leading-[2.5] mx-auto  ' href='#'>MORE</a>
                 </div>
 
             </section>
-            <section className="snap-end h-screen w-screen card bg-amber-200 text-black">
+
+            <section className="snap-start h-screen w-screen bg-amber-200 text-black">
                 <div
                     className='grid grid-cols-2 gap-4 h-[80vh] w-[80vh] border-4 border-red-400 mx-auto my-[10vh]'></div>
             </section>
-            <section className="snap-end h-screen w-screen card bg-green-300 text-black">
+
+            <section className="snap-start h-screen w-screen bg-transparent text-black">
 
                 <div
                     className='grid grid-cols-2 gap-4 h-[80vh] w-[80vh] border-4 border-red-400 mx-auto my-[10vh]'></div>

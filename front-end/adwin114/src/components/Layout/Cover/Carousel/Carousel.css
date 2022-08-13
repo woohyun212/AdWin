@@ -1,0 +1,22 @@
+.slick-slide {
+    height: 100%;
+    box-sizing: border-box;
+
+}
+.slick-list {
+    height: 100%;
+}
+.slick-dots {
+    bottom: 10px;
+}
+
+.slick-dots li.slick-active button::before {
+    color: white;
+}
+.slick-dots li button::before {
+    color: white;
+}
+.slick-next::before,
+.slick-prev::before {
+    display: none;
+}
