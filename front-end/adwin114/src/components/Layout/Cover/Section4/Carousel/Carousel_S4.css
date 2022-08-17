@@ -1,0 +1,26 @@
+.slick-slide {
+    height: 100%;
+    box-sizing: border-box;
+
+}
+.slick-list {
+    height: 100%;
+}
+.slick-dots {
+    bottom: 10px;
+}
+
+.slick-dots li.slick-active button::before {
+    color: white;
+}
+.slick-dots li button::before {
+    color: white;
+}
+.Carousel_S4 .slick-next::before,
+.Carousel_S4 .slick-prev::before {
+    display: ;
+}
+
+.Carousel_S4 .slick-slide {
+    padding: 0 13.5px;
+}

@@ -17,12 +17,11 @@ export default function Carousel2() {
     };
     return (
         <Slider {...settings} className="w-[28.4%]">
-            
-            <ImageCard src={require("images/carousel/anthony-esau.png")}/>
-            <ImageCard src={require("images/carousel/anthony-esau.png")}/>
-            <ImageCard src={require("images/carousel/scott-webb.png")}/>
-            <ImageCard src={require("images/carousel/img1.jpg")}/>
-            <ImageCard src={require("images/carousel/img2.jpg")}/>
+            <ImageCard src={require("images/carousel/anthony-esau.png")} ratio="2/3"/>
+            <ImageCard src={require("images/carousel/anthony-esau.png")} ratio="2/3"/>
+            <ImageCard src={require("images/carousel/scott-webb.png")} ratio="2/3"/>
+            <ImageCard src={require("images/carousel/img1.jpg")} ratio="2/3"/>
+            <ImageCard src={require("images/carousel/img2.jpg")} ratio="2/3"/>
         </Slider>
     );
 }

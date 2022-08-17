@@ -4,6 +4,11 @@ module.exports = {
   content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily:{
+        'SenRegular':['Sen Regular'],
+        'SenBold': ['Sen Bold'],
+        'SenExtraBold': ['Sen ExtraBold'],
+      },
       backgroundImage: {
         'hero-pattern': "url('/images/pedro-lastra.jpg')",
         // 'footer-texture': "url('/img/footer-texture.png')",
