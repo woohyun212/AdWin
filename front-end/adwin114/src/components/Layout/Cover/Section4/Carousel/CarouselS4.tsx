@@ -5,7 +5,7 @@ import React from "react";
 import Slider from "react-slick";
 import ImageCard from "./ImageCard";
 
-export default function Carousel_S4() {
+export default function CarouselS4() {
     const settings = {
         dots: true,
         infinite: true,
@@ -16,10 +16,10 @@ export default function Carousel_S4() {
         autoplaySpeed: 3000,
     };
     return (
-        <Slider {...settings} className="Carousel_S4 w-[100%] h-[70%] border-2 border-sky-500" speed={1000}>
-            <ImageCard src={require("images/carousel/분양1.jpg")} className="asas"/>
+        <Slider {...settings} className="Carousel_S4 w-[80%] flex items-center justify-center space-x-16 mr-[5.5rem]" speed={1000}>
+            <ImageCard src={require("images/carousel/분양1.jpg")} />
             <ImageCard src={require("images/carousel/분양1.png")}/>
-            <ImageCard src={require("images/carousel/malcolm-shadrach-_r80LCluvVM-unsplash 1.png")}/>
+            <ImageCard src={require("images/carousel/분양2.png")}/>
             <ImageCard src={require("images/carousel/malcolm-shadrach-_r80LCluvVM-unsplash 1.png")}/>
             <ImageCard src={require("images/carousel/malcolm-shadrach-_r80LCluvVM-unsplash 1.png")}/>
             <ImageCard src={require("images/carousel/malcolm-shadrach-_r80LCluvVM-unsplash 1.png")}/>

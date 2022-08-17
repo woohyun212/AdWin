@@ -7,7 +7,7 @@ interface ImageCardProps {
     ratio?: string
 }
 
-export default function ImageCard({src, className="", alt="",ratio="5/3"} : ImageCardProps) {
+export default function ImageCard({src, className="", alt="", ratio="5/3"} : ImageCardProps) {
     return (
         <div className={`flex aspect-[${ratio}] overflow-hidden`}>
             <img

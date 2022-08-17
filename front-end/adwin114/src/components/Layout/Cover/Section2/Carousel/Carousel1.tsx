@@ -16,7 +16,7 @@ export default function Carousel1() {
         autoplaySpeed: 3000
     };
     return (
-        <Slider {...settings} className="w-[69%]">
+        <Slider {...settings} className="Carousel_S2 w-[69%]">
             <ImageCard src={require("images/carousel/분양2.png")}/>
             <ImageCard src={require("images/carousel/anthony-esau.png")}/>
             <ImageCard src={require("images/carousel/scott-webb.png")}/>
