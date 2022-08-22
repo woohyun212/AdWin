@@ -1,10 +1,10 @@
 import json
-from pymongo import MongoClient
-from pymongo.database import Database
-from pymongo.collection import Collection
+
+from motor import motor_asyncio
 from pprint import pprint
 import datetime
-
+# from pymongo import MongoClient  # 비동기 처리를 위해 AsyncIOMotorClient로 변경
+import motor.motor_asyncio as masyncio
 
 with open('./keys.json', 'r', encoding='utf-8') as keys:
     keys = json.load(keys)
@@ -12,15 +12,14 @@ with open('./keys.json', 'r', encoding='utf-8') as keys:
     mgdb_password = keys['mgdb_password']
     database_name = keys['database_name']
 
-mongo_client = MongoClient(host='localhost', port=27017,
-                           username=mgdb_id, password=mgdb_password)
-
-db: Database = mongo_client[database_name]
-user_collection: Collection = db['User']
-
+mongo_client = masyncio.AsyncIOMotorClient(host='localhost', port=27017,
+                                           username=mgdb_id, password=mgdb_password)
+db = mongo_client[database_name]
+user_collection = db['User']
+post_collection = db['Post']
 if __name__ == "__main__":
     """
-    new3   _users = list([])
+    new_users = list([])
     for count in range(1, 11):
         fake_user = {
             "username": f"user{count}",
@@ -33,5 +32,4 @@ if __name__ == "__main__":
         new_users.append(fake_user)
     user_collection.insert_many(new_users)
     #"""
-    for i in user_collection.find():
-        pprint(i)
+    pass
