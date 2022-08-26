@@ -1,7 +1,9 @@
 import datetime
+from enum import Enum
+
 from bson import ObjectId
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
+from typing import Optional, List
 
 """
 이 파일은 FastAPI에서 MongoDB를 구조화하여 사용하기 위해 만듬.
@@ -69,7 +71,7 @@ class UserModelIn(UserModelBase):
 
 class UserModelOut(UserModelBase):
     """User 모델의 Output을 위한 모델"""
-    created_at: str
+    created_at: datetime.datetime
 
 
 class UpdateUserModel(BaseModel):
@@ -85,10 +87,65 @@ class UpdateUserModel(BaseModel):
         arbitrary_types_allowed = True
 
 
+class CommentModelBase(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    user_id: str
+    content: str
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
+
+class CommentModelIn(CommentModelBase):
+    class Config:
+        schema_extra = {
+            "example": {
+                "user_id": "63086d10af036fc170696eec",  # 댓글봇 ID
+                "content": "댓글봇 입니당"
+            }
+        }
+
+
+class CommentModelOut(CommentModelBase):
+    post_id: str
+    likes: int
+    created_at: str
+
+
+class UpdateCommentModel(BaseModel):
+    content: Optional[str]
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "content": "str : 대댓글내용"
+            }
+        }
+
+
+class ReCommentModelBase(BaseModel):
+    parent_comment: Optional[str]
+
+
+class PostType(str, Enum):
+    CounselorRecruit = "CounselorRecruit"
+    SalePromotion = "SalePromotion"
+    RealEstateNews = "RealEstateNews"
+
+
+class RecruitType(str, Enum):
+    SalesPerson = "SalesPerson"  # 직원
+    TeamLeader = "TeamLeader"  # 리더
+    Director = "Director"  # 본부장
+    General = "General"  # 총괄
+    Agency = "Agency"  # 대행사
+
+
 class PostModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    author: PyObjectId = Field(default_factory=PyObjectId, alias="author")
-    post_type: str
+    user_id: str
     title: str
     content: str
 
@@ -96,90 +153,43 @@ class PostModel(BaseModel):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+
+
+class PostModelIn(PostModel):
+    area: Optional[str] = None
+    recruit_type: Optional[RecruitType] = None
+    url: Optional[str] = None
+
+    class Config:
         schema_extra = {
             "example": {
-                "author": "ObjectId",
-                "post_type": "string",
                 "title": "string",
-                "content": "string?"
+                "content": "string",
+                "area": "string [CounselorRecruit, SalePromotion]",
+                "recruit_type": "string [CounselorRecruit]",
+                "url": "string [RealEstateNews]"
             }
         }
 
 
-class PostModelIn(PostModel):
-    pass
-
-
 class PostModelOut(PostModel):
-    likes: int
-    created_at: str
-    pass
+    created_at: datetime.datetime = None
+    post_type: str = None
+    comments: List[CommentModelOut]
+    area: Optional[str] = None
+    recruit_type: Optional[str] = None
+    url: Optional[str] = None
 
 
 class UpdatePostModel(BaseModel):
     title: str
     content: str
+    area: Optional[str]
+    recruit_type: Optional[str]
+    building_type: Optional[str]
+    url: Optional[str]
 
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
-        schema_extra = {
-            "example": {
-                "post_type": "string",
-                "title": "string",
-                "content": "string?"
-            }
-        }
-class CounselorRecruitModelIn(PostModel):
-    """
-    :param area : 지역
-    :param recruit_type : 모집 분야
-        salesperson   : 영업 사원
-        team_leader   : 팀장
-        director      : 본부장
-        general       : 총괄
-        agency        : 대행사
-
-    """
-    area: str
-    recruit_type: str
-
-
-class CounselorRecruitModelOut(PostModel):
-    area: str
-    recruit_type: str
-    created_at: str
-
-
-class UpdateCounselorRecruitModel(UpdatePostModel):
-    area: str
-    recruit_type: str
-
-
-class SalePromotionModel(PostModel):
-    area: str
-    building_type: str  # 아파트, 상가, 지산 etc
-    pass
-
-
-class RealEstateNewsModel(PostModel):
-    url: str
-
-
-class CommentModel(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    article: PyObjectId = Field(default_factory=PyObjectId, alias="article")
-    author: PyObjectId = Field(default_factory=PyObjectId, alias="author")
-    content: str
-    likes: int
-    created_at: str
-
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
-
-
-class ReCommentModel(CommentModel):
-    parent_comment: PyObjectId = Field(default_factory=PyObjectId, alias="parent_comment")

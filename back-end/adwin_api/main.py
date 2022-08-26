@@ -1,77 +1,37 @@
 from typing import List
-from fastapi import FastAPI, Body, HTTPException
-from fastapi.encoders import jsonable_encoder
-from starlette import status
-from starlette.responses import JSONResponse
+from fastapi import FastAPI
+from routers import users, posts, comments, re_comments
 
 import database as db
 from models import *
-
-from pprint import pprint
+from utils import *
 
 app = FastAPI()
 
-
-@app.post("/users", response_description="Add new user", response_model=UserModelIn)
-async def create_user(user_data: UserModelIn = Body()):
-    user_data = jsonable_encoder(user_data)
-    user_data["created_at"] = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    new_user = await db.user_collection.insert_one(user_data)
-    created_user = await db.user_collection.find_one({"_id": new_user.inserted_id})
-    try:
-        del created_user['password']
-    except KeyError:
-        pass
-    return JSONResponse(status_code=status.HTTP_201_CREATED,
-                        content=created_user)
+app.include_router(users.router)
+app.include_router(posts.router)
+app.include_router(comments.router)
 
 
-@app.get("/users", response_description="List all users", response_model=List[UserModelOut])
+@app.get("/all_users", response_description="List all users",
+         response_model=List[UserModelOut], tags=['All'])
 async def list_users():
-    # print(type(db.user_collection.find()))
-    # print(type(x async for x in db.user_collection.find()))
+    """지금은 저장되는 User 수가 많지 않으므로 전체를 다 불러올 수 있지만
+    나중에는 500 단위씩 끊어서 가져올 것.
+    User list 를 사용할 일이 있을까 싶긴함."""
     # TODO: Search "What is an `async_generator`"
     return [document async for document in db.user_collection.find()]
 
 
-@app.get("/users/{user_id}", response_description="Get a user by id", response_model=UserModelOut)
-async def get_user(user_id: str):
-    user = await db.user_collection.find_one({"_id": user_id})
-    return user
+# post 마다 타입이 다르기 때문에 응답 모델을 지정하지 않음.
+@app.get("/all_posts", response_description="List all posts", tags=['All'])
+async def get_all_posts(post_type: PostType | None = None):
+    if post_type is not None:
+        return [await drop_none(post) async for post in db.post_collection.find({"post_type": post_type})]
+    return [await drop_none(post) async for post in db.post_collection.find()]
 
 
-@app.patch("/user/{user_id}", response_description="Update a User", response_model=UpdateUserModel)
-async def update_user(user_id: str, user: UpdateUserModel = Body(...)):
-    user = {k: v for k, v in user.dict().items() if v is not None}
-    if user != {}:
-        update_result = await db.user_collection.update_one({"_id": user_id}, {"$set": user})  # await
-        if update_result.modified_count == 1:
-            if (
-                    updated_user := await db.user_collection.find_one({"_id": user_id})
-            ) is not None:
-                return updated_user
-    # 변경 점이 없으면
-    if (existing_user := await db.user_collection.find_one({"_id": user_id})) is not None:
-        return existing_user
-    raise HTTPException(status_code=404, detail=f"User {user_id} is not found")
-
-
-@app.delete("/user/{user_id}")
-async def delete_user(user_id: str):
-    is_valid = True  # TODO: Create method to check this request is valid.
-    if is_valid and ((db.user_collection.find_one({"_id": user_id})) is not None):
-        await db.user_collection.delete_one({"_id": user_id})
-        return JSONResponse(status_code=status.HTTP_200_OK,
-                            content={"config": "User has been deleted successfully"})
-    raise HTTPException(status_code=404, detail=f"User {user_id} is not found")
-
-
-@app.post("/posts", response_description="Add new post", response_model=PostModelIn)
-async def create_post(post_data: PostModelIn = Body(...)):
-    post_data = jsonable_encoder(post_data)
-    post_data["created_at"] = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    pprint(post_data)
-    new_post = await db.post_collection.insert_one(post_data)
-    created_post = await db.post_collection.find_one({"_id": new_post.inserted_id})
-    return JSONResponse(status_code=status.HTTP_201_CREATED,
-                        content=created_post)
+@app.get("/all_comments", response_description="List all comments",
+         response_model=List[CommentModelOut], tags=['All'])
+async def get_all_comments():
+    return [await drop_none(comment) async for comment in db.comment_collection.find()]
