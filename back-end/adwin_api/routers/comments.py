@@ -6,6 +6,7 @@ from starlette.responses import JSONResponse
 import database as db
 from authentication import is_valid
 from models import *
+from routers.users import get_user
 from utils import *
 from pprint import pprint
 
@@ -41,7 +42,9 @@ async def get_comments_in_post(post_id: str):
     """
     comments = [await drop_none(comment) async for comment in
                 db.comment_collection.find({"post_id": post_id})]
-    pprint(comments)
+    for comment in comments:
+        if comment is not None:
+            comment["user_name"] = (await get_user(comment["user_id"]))["username"]
     return comments
 
 

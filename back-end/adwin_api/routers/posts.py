@@ -1,4 +1,4 @@
-from typing import Optional
+from pprint import pprint
 
 from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -8,6 +8,8 @@ from starlette.responses import JSONResponse
 import database as db
 from authentication import is_valid
 from models import PostModelIn, UpdatePostModel, PostType, RecruitType
+from routers.comments import get_comments_in_post
+from routers.users import get_user
 from utils import *
 
 router = APIRouter(prefix='/posts',
@@ -42,8 +44,8 @@ async def create_post(post_type: PostType, recruit_type: RecruitType | None = No
 async def get_post(post_id: str):
     if (post_detail := await db.post_collection.find_one({"_id": post_id})) is not None:
         post_detail = await drop_none(post_detail)
-        # 댓글 불러오는 거부터 시작하면됨 ㅇㅇㅇㅇ
-        post_detail["comments"] = await db.comment_collection.find({"article": post_id})
+        post_detail["user_name"] = (await get_user(post_detail["user_id"]))["username"]
+        post_detail["comments"] = await get_comments_in_post(post_id)
         return post_detail
     raise HTTPException(status_code=404, detail=f"Post {post_id} is not found")
 

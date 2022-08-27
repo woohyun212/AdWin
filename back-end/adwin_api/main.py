@@ -26,9 +26,12 @@ async def list_users():
 # post 마다 타입이 다르기 때문에 응답 모델을 지정하지 않음.
 @app.get("/all_posts", response_description="List all posts", tags=['All'])
 async def get_all_posts(post_type: PostType | None = None):
-    if post_type is not None:
-        return [await drop_none(post) async for post in db.post_collection.find({"post_type": post_type})]
-    return [await drop_none(post) async for post in db.post_collection.find()]
+    _posts: list[dict] = [await drop_none(post) async for post in db.post_collection.find({"post_type": post_type})] \
+        if post_type is not None \
+        else [await drop_none(post) async for post in db.post_collection.find()]
+    for _post in _posts:
+        _post["user_name"] = (await users.get_user(_post["user_id"]))["username"]
+    return _posts
 
 
 @app.get("/all_comments", response_description="List all comments",
