@@ -1,10 +1,7 @@
-import datetime
-from typing import List
-
 from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 from starlette import status
-from starlette.responses import JSONResponse
+from fastapi.responses import JSONResponse
 
 import database as db
 from authentication import is_valid

@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 from starlette import status
-from starlette.responses import JSONResponse
+from fastapi.responses import JSONResponse
 
 import database as db
 from authentication import is_valid
 from models import *
+from routers.likes import delete_like, get_likes_count
 from routers.users import get_user
 from utils import *
-from pprint import pprint
 
 router = APIRouter(prefix='',
                    tags=['Comments'],
@@ -20,16 +20,15 @@ router = APIRouter(prefix='',
 async def create_comment(post_id: str, comment_data: CommentModelIn = Body(...)):
     """Create Comment"""
     comment_data = jsonable_encoder(comment_data)
-    user = await db.user_collection.find_one({"_id": comment_data["user_id"]})
-    user_id = user["_id"]
-    if is_valid(user) and (user is not None):
-        if is_valid(post_id) and ((db.post_collection.find_one({"_id": post_id})) is not None):
-            initialize_data(comment_data, user_id=user_id, post_id=post_id)
+    user = (await db.user_collection.find_one({"_id": comment_data["user_id"]}))
+    if is_valid(user["_id"]) and (user is not None):
+        if post := (await db.post_collection.find_one({"_id": post_id})) is not None:
+            await initialize_data(comment_data, user_id=user["_id"], post_id=post_id)
             new_comment = await db.comment_collection.insert_one(comment_data)
             created_comment = await db.comment_collection.find_one({"_id": new_comment.inserted_id})
             return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_comment)
     if user is None:
-        raise HTTPException(status_code=400, detail=f"Comment {comment_data['user_id']} is not found")
+        raise HTTPException(status_code=400, detail=f"Comment {comment_data.user_id} is not found")
     raise HTTPException(status_code=400, detail=f"What are you doing now?")
 
 
@@ -45,6 +44,7 @@ async def get_comments_in_post(post_id: str):
     for comment in comments:
         if comment is not None:
             comment["user_name"] = (await get_user(comment["user_id"]))["username"]
+            comment["likes"] = await get_likes_count(comment["_id"])
     return comments
 
 
@@ -71,8 +71,9 @@ async def update_comment(comment_id: str, update_data: UpdateCommentModel = Body
 
 @router.delete("/comments/{comment_id}", response_description="Delete a comment")
 async def delete_comment(comment_id: str):
-    if is_valid(comment_id) and await db.comment_collection.find_one({"_id": comment_id}) is not None:
+    if await db.comment_collection.find_one({"_id": comment_id}) is not None:
         await db.comment_collection.delete_one({"_id": comment_id})
+        await delete_like(comment_id)
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={"config": "Comment has been deleted successfully"})
     raise HTTPException(status_code=404, detail=f"Comment {comment_id} is not found")

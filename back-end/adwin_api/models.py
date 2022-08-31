@@ -3,7 +3,7 @@ from enum import Enum
 
 from bson import ObjectId
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 """
 이 파일은 FastAPI에서 MongoDB를 구조화하여 사용하기 위해 만듬.
@@ -136,8 +136,8 @@ class PostType(str, Enum):
 
 
 class RecruitType(str, Enum):
-    SalesPerson = "SalesPerson"  # 직원
-    TeamLeader = "TeamLeader"  # 리더
+    SalesPerson = "SalesPerson"  # 영업 사원
+    TeamLeader = "TeamLeader"  # 팀장
     Director = "Director"  # 본부장
     General = "General"  # 총괄
     Agency = "Agency"  # 대행사
@@ -163,10 +163,11 @@ class PostModelIn(PostModel):
     class Config:
         schema_extra = {
             "example": {
+                "user_id": "63033dc1f7c78b7416dce005",  # Test 1
                 "title": "string",
                 "content": "string",
                 "area": "string [CounselorRecruit, SalePromotion]",
-                "recruit_type": "string [CounselorRecruit]",
+                "recruit_type": "SalesPerson [CounselorRecruit]",
                 "url": "string [RealEstateNews]"
             }
         }
@@ -193,3 +194,17 @@ class UpdatePostModel(BaseModel):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+
+
+class LikesModelIn(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    target_id: str
+    user_id: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                    "target_id": "string",
+                    "user_id": "63086d10af036fc170696eec"
+            }
+        }

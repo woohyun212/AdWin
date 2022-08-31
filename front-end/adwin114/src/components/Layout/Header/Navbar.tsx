@@ -6,29 +6,30 @@ import { Link } from "react-router-dom";
 
 export default function Navbar({fixed} : any) {
     const [navbarOpen, setNavbarOpen] = useState(false);
-    const [Color, setColor] = useState("white");
+    const [Color, setColor] = useState("[#06113C]");
+    
+    // const changeFontColor = () => {
+    //     if (window.scrollY >= 1000) {
+    //         setColor('white');
+    //     } else {
+    //         setColor('[#06113C]');
+    //     }
+    // };
+    // useEffect(() => {
+    //     window.addEventListener('scroll', changeFontColor, true);
+    //     return() => {window.removeEventListener('scroll', changeFontColor);}
+    // }, []);
 
-    const changeFontColor = () => {
-        if (window.scrollY >= 1000) {
-            setColor('white');
-        } else {
-            setColor('[#06113C]');
-        }
-    };
-    useEffect(() => {
-        window.addEventListener('scroll', changeFontColor, true);
-        return() => {window.removeEventListener('scroll', changeFontColor);}
-    }, []);
 
     return (
         <nav
-            className={`w-full flex flex-wrap items-center justify-between border-b border-slate-300 bg-transparent text-${Color} transition-color ease-in-out duration-500`}>
+            className={`w-full flex flex-wrap items-center justify-between border-y border-[#A8A8A8] bg-transparent text-${Color} transition-color ease-in-out duration-500`}>
             <div
                 className="container px-4 mx-auto flex flex-wrap items-center justify-between">
                 <div
                     className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
                     <Link
-                        className="text-lg tracking-widest font-sans leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase"
+                        className="text-xs tracking-widest font-sans leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase"
                         to="/">
                         <AdWinLogo/>AdWin114
                     </Link>
@@ -48,25 +49,25 @@ export default function Navbar({fixed} : any) {
 
                     <ul className="flex flex-col lg:flex-row list-none mr-auto">
                         <li className="nav-item px-6 py-2">
-                            <Item title="분양홍보 " href="/"/>
+                            <Item title="분양홍보 " to="/promotion"/>
                         </li>
                         <li className="nav-item px-6 py-2">
-                            <Item title="분양상담사 모집" href="/"/>
+                            <Item title="분양상담사 모집" to="/recruit-announce"/>
                         </li>
                         <li className="nav-item px-6 py-2">
-                            <Item title="커뮤니티" href="/"/>
+                            <Item title="커뮤니티" to="/community"/>
                         </li>
                         <li className="nav-item px-6 py-2">
-                            <Item title="뉴스" href="/"/>
+                            <Item title="뉴스" to="/news"/>
                         </li>
                         <li className="nav-item px-6 py-2">
-                            <Item title="문의사항" href="/"/>
+                            <Item title="문의사항" to="/qna"/>
                         </li>
                     </ul>
-                    <Item title="로그인" href="/" addClass="px-3 py-2"/>
+                    <Item title="로그인" to="/" addClass="px-3 py-2"/>
                     <Item
                         title="회원가입"
-                        href="/"
+                        to="/"
                         addClass={`border rounded-lg px-3 py-2 border-${Color}`}/>
                 </div>
             </div>
@@ -76,21 +77,21 @@ export default function Navbar({fixed} : any) {
 
 interface Props {
     title: string;
-    href: string;
+    to: string;
     addClass?: string;
 }
 function Item({
     title,
-    href,
+    to,
     addClass = ''
 } : Props) {
     return (
-        <a
+        <Link
             // className뒤에 꼭 공백하나 이상 남겨두기
             className={"flex items-center text-base font-semibold uppercase leading-snug hover:opacity-75 tracking-widest " +
                     addClass}
-            href={href}>
+            to={to}>
             <span className="">{title}</span>
-        </a>
+        </Link>
     );
 }

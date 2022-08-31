@@ -1,14 +1,13 @@
-from pprint import pprint
-
 from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 from starlette import status
-from starlette.responses import JSONResponse
+from fastapi.responses import JSONResponse
 
 import database as db
 from authentication import is_valid
 from models import PostModelIn, UpdatePostModel, PostType, RecruitType
 from routers.comments import get_comments_in_post
+from routers.likes import delete_like, get_likes_count
 from routers.users import get_user
 from utils import *
 
@@ -19,19 +18,18 @@ router = APIRouter(prefix='/posts',
 
 # Post 관련 Endpoints
 @router.post("", response_description="Add new post", response_model=PostModelIn)
-async def create_post(post_type: PostType, recruit_type: RecruitType | None = None,
-                      post_data: PostModelIn = Body(...)):
+async def create_post(post_type: PostType, post_data: PostModelIn = Body(...)):
     """ Post 글 생성합니다."""
     post_data = jsonable_encoder(post_data)
     user_id = post_data["user_id"]
-    if post_type == PostType.CounselorRecruit and recruit_type is None:
+    if post_type == PostType.CounselorRecruit and post_data["recruit_type"] is None:
         raise HTTPException(status_code=400, detail="required parameter `recruit_type` missing")
     if post_type != PostType.CounselorRecruit:
-        recruit_type = None
+        post_data["recruit_type"] = None
         if post_type == PostType.RealEstateNews:
             post_data["area"] = None
-    if is_valid(user_id) and ((db.user_collection.find_one({"_id": user_id})) is not None):
-        initialize_data(data=post_data, post_type=post_type, recruit_type=recruit_type)
+    if is_valid(user_id):
+        await initialize_data(data=post_data, post_type=post_type, recruit_type=post_data["recruit_type"])
         new_post = await db.post_collection.insert_one(post_data)
         created_post = await db.post_collection.find_one({"_id": new_post.inserted_id})
         return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_post)
@@ -46,8 +44,19 @@ async def get_post(post_id: str):
         post_detail = await drop_none(post_detail)
         post_detail["user_name"] = (await get_user(post_detail["user_id"]))["username"]
         post_detail["comments"] = await get_comments_in_post(post_id)
+        post_detail["likes"] = await get_likes_count(post_id)
         return post_detail
     raise HTTPException(status_code=404, detail=f"Post {post_id} is not found")
+
+
+@router.get("", response_description="Get 8 posts")
+async def get_all_posts(post_type: PostType):
+    _posts: list[dict] = await db.post_collection.find({"post_type": post_type}).to_list(length=8)
+    for _post in _posts:
+        _post["user_name"] = (await get_user(_post["user_id"]))["username"]
+        _post["likes"] = await get_likes_count(_post["_id"])
+        _post = await drop_none(_post)
+    return _posts
 
 
 @router.patch("/{post_id}", response_description="Update a post", response_model=UpdatePostModel)
@@ -65,8 +74,10 @@ async def update_post(post_id: str, update_data: UpdatePostModel = Body(...)):
 
 @router.delete("/{post_id}", response_description="Delete a post")
 async def delete_post(post_id: str):
-    if is_valid(post_id) and await db.post_collection.find_one({"_id": post_id}) is not None:
+    if await db.post_collection.find_one({"_id": post_id}) is not None:
         await db.post_collection.delete_one({"_id": post_id})
+        await delete_like(post_id)
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={"config": "Post has been deleted successfully"})
     raise HTTPException(status_code=404, detail=f"Post {post_id} is not found")
+
