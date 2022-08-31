@@ -1,0 +1,21 @@
+.Carousel_S4 .slick-next::before,
+.Carousel_S4 .slick-prev::before {
+    display: block;
+    color: gray;
+    font-size: 2.5rem;
+    font-family: 'Sen Regular';
+    justify-content: center;
+    align-items: center;
+}
+
+.Carousel_S4 .slick-slide {
+    padding: 0 10px;
+}
+
+.Carousel_S4 .slick-prev:before {
+    content: '<';
+}
+.Carousel_S4 .slick-next:before {
+    padding-left: 2.75rem;
+    content: '>';
+}
