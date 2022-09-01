@@ -1,30 +1,11 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios"
+
 import RecruitAnnounceCard from "./RecruitAnnounceCard";
 
-const API_URI = 'http://localhost:8000/posts?post_type=CounselorRecruit'
 
-export default function RecruitAnnounceList() {
-    const [posts, setposts] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetctPosts = async () => {
-            try {
-                setError(null);
-                setposts([]);
-                setLoading(true);
-                const response = await axios.get(API_URI);
-                setposts(response.data);
-            } catch (e : any) {
-                setError(e);
-            }
-            setLoading(false);
-        };
+export default function RecruitAnnounceList({loading=false, error=null, posts=[]}) {
 
-        fetctPosts();
-    }, []);
 
     if (loading) 
         return <div>로딩중..</div>;

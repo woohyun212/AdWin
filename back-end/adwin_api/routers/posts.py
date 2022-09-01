@@ -29,13 +29,23 @@ async def create_post(post_type: PostType, post_data: PostModelIn = Body(...)):
         if post_type == PostType.RealEstateNews:
             post_data["area"] = None
     if is_valid(user_id):
-        await initialize_data(data=post_data, post_type=post_type, recruit_type=post_data["recruit_type"])
+        await initialize_data(data=post_data, post_type=post_type,
+                              recruit_type=post_data["recruit_type"], views=0)
         new_post = await db.post_collection.insert_one(post_data)
         created_post = await db.post_collection.find_one({"_id": new_post.inserted_id})
         return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_post)
     if user_id is None:
         raise HTTPException(status_code=400, detail=f"Post {user_id} is not found")
     raise HTTPException(status_code=400, detail=f"What are you doing now?")
+
+
+@router.get("/counts", response_description="Get posts count")
+async def get_posts_count(post_type: PostType):
+    docs_count = await db.post_collection.count_documents({"post_type": post_type})
+    res = {
+        "all_pages": math.ceil(docs_count / 8)
+    }
+    return res
 
 
 @router.get("/{post_id}", response_description="Get a post")
@@ -50,13 +60,20 @@ async def get_post(post_id: str):
 
 
 @router.get("", response_description="Get 8 posts")
-async def get_all_posts(post_type: PostType):
-    _posts: list[dict] = await db.post_collection.find({"post_type": post_type}).to_list(length=8)
+async def get_8_posts(post_type: PostType, page_number: int = 1):
+    _posts: list[dict] = await db.post_collection.find({"post_type": post_type},
+                                                       skip=(page_number - 1) * 8).to_list(length=8)
     for _post in _posts:
         _post["user_name"] = (await get_user(_post["user_id"]))["username"]
         _post["likes"] = await get_likes_count(_post["_id"])
         _post = await drop_none(_post)
-    return _posts
+    docs_count = await db.post_collection.count_documents({"post_type": post_type})
+    res = {
+        "all_pages": math.ceil(docs_count / 8),
+        "page_number": page_number,
+        "posts": _posts,
+    }
+    return res
 
 
 @router.patch("/{post_id}", response_description="Update a post", response_model=UpdatePostModel)
@@ -80,4 +97,3 @@ async def delete_post(post_id: str):
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={"config": "Post has been deleted successfully"})
     raise HTTPException(status_code=404, detail=f"Post {post_id} is not found")
-
