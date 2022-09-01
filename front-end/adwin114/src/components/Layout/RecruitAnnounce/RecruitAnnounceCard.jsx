@@ -1,25 +1,9 @@
 import React from "react"
 import { Link } from "react-router-dom"
 
-
-interface RecruitAnnounceCardProps {
-    post : { 
-        _id: string,
-        title: string,
-        area: string,
-        user_name: string,
-        content: string,
-        created_at: string,
-        views: number,
-        likes: number,
-        thumnailUrl?: string
-    }
-}
-
-
 export default function RecruitAnnounceCard({
     post
-} : RecruitAnnounceCardProps) {
+}) {
     return (
         <Link to={post._id} className="flex flex-row h-[12.5%] w-full">
             <span className="flex w-[10%] items-center justify-center h-full">{post.area}</span>
