@@ -6,7 +6,7 @@ import Router from './Router';
 import ScreenSize from "./components/Debug/ScreenSize"
 
 const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement
+    document.getElementById('root')
 );
 
 root.render(

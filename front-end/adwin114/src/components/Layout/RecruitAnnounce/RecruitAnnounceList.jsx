@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 
 import RecruitAnnounceCard from "./RecruitAnnounceCard";
 
@@ -15,7 +15,7 @@ export default function RecruitAnnounceList({loading=false, error=null, posts=[]
         return null;
     return (<> {
         posts.map(
-            (post : any) =>
+            (post) =>
                 (<React.Fragment key={post._id}>
                     <RecruitAnnounceCard post={post}/>
                     <hr className="border-[#06113C] w-full opacity-30"/>

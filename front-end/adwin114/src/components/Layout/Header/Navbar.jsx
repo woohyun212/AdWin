@@ -4,7 +4,7 @@ import {faBars} from "@fortawesome/free-solid-svg-icons";
 import {ReactComponent as AdWinLogo} from 'assets/WINAD.svg';
 import { Link } from "react-router-dom";
 
-export default function Navbar({fixed} : any) {
+export default function Navbar({fixed}) {
     const [navbarOpen, setNavbarOpen] = useState(false);
     const [Color, setColor] = useState("[#06113C]");
     
@@ -23,7 +23,7 @@ export default function Navbar({fixed} : any) {
 
     return (
         <nav
-            className={`w-full flex flex-wrap items-center justify-between border-y border-[#A8A8A8] bg-transparent text-${Color} transition-color ease-in-out duration-500`}>
+            className={`w-full flex flex-wrap items-center justify-between border-b border-${Color} bg-transparent text-${Color} transition-color ease-in-out duration-500`}>
             <div
                 className="container px-4 mx-auto flex flex-wrap items-center justify-between">
                 <div
@@ -75,16 +75,11 @@ export default function Navbar({fixed} : any) {
     );
 }
 
-interface Props {
-    title: string;
-    to: string;
-    addClass?: string;
-}
 function Item({
     title,
     to,
     addClass = ''
-} : Props) {
+}) {
     return (
         <Link
             // className뒤에 꼭 공백하나 이상 남겨두기

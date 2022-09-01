@@ -22,20 +22,21 @@ const RECRUIT_TYPE_DATA = [
     ];
 
 export default function SearchBar() {
-    const [selectedAreaValue, setSelectedAreaValue] = useState < string | null > (
+    const [selectedAreaValue, setSelectedAreaValue] = useState(
         '지역'
     );
-    const [selectedRecruitTypeValue, setSelectedRecruitTypeValue] = useState < string | null > (
+    const [selectedRecruitTypeValue, setSelectedRecruitTypeValue] = useState(
         '정렬'
     );
 
-    const handleDropArea = (e : any) => {
-        const {value} : any = e.target;
+    const handleDropArea = (e) => {
+        const {value} = e.target;
         setSelectedAreaValue(AREA_DATA.filter(el => el.value === value)[0].id);
+        console.log(selectedAreaValue);
     };
 
-    const handleDropRecruitType = (e : any) => {
-        const {value} : any = e.target;
+    const handleDropRecruitType = (e) => {
+        const {value} = e.target;
         setSelectedRecruitTypeValue(RECRUIT_TYPE_DATA.filter(el => el.value === value)[0].id);
         console.log(selectedRecruitTypeValue);
     };

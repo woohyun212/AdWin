@@ -6,8 +6,7 @@ import axios from "axios"
 import RecruitAnnounceList from "./RecruitAnnounceList";
 import Pagination from "./Pagination/Pagination";
 
-
-export default function RecruitAnnounce(): JSX.Element {
+export default function RecruitAnnounce() {
     const [posts, setposts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -24,7 +23,7 @@ export default function RecruitAnnounce(): JSX.Element {
             setposts(response.data["posts"]);
             setAllPages(response.data["all_pages"])
             console.log(response.data);
-        } catch (e : any) {
+        } catch (e) {
             setError(e);
         }
         setLoading(false);
@@ -44,17 +43,19 @@ export default function RecruitAnnounce(): JSX.Element {
                 </div>
                 <div
                     className="flex flex-col h-[77.5%] w-full gap-0 items-center justify-center px-2 border-4 border-y-[#06113C] border-x-transparent">
-                    <RecruitAnnounceList loading={loading} error={error} posts={posts} />
+                    <RecruitAnnounceList loading={loading} error={error} posts={posts}/>
                 </div>
                 <div className="flex w-full items-center justify-between ">
                     <div className="w-1/3"/>
-                    <Pagination allPages={allPages} currentPage={currentPage} setCurrentPage={setCurrentPage} fetctPosts={fetctPosts}/>
+                    <Pagination
+                        allPages={allPages}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}/>
                     <div className="w-1/3">
                         <Link to="write" className="px-3 py-1 bg-[#FF8C32] float-right mr-11">글 작성</Link>
                     </div>
                 </div>
-                
-            </div>    
+            </div>
         </div>
     )
 }

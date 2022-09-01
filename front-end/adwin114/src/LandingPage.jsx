@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React from 'react';
 import './assets/css/App.css';
-import Header from 'components/Layout/Header';
-import Cover from 'components/Layout/LandingPage/Cover';
-import Footer from 'components/Layout/LandingPage/Footer';
+import Header from './components/Layout/Header';
+import Cover from './components/Layout/LandingPage/Cover';
+import Footer from './components/Layout/LandingPage/Footer';
 
 export default function App() {
     return (<> 

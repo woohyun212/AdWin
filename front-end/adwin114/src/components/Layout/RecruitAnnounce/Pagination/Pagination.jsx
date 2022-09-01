@@ -1,18 +1,10 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import React from "react";
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/20/solid'
 
-interface PaginationProps {
-    allPages: number,
-    currentPage: number,
-    setCurrentPage: Function,
-    fetctPosts: Function
-}
-
 export default function Pagination(
-    {allPages, currentPage, setCurrentPage, fetctPosts} : PaginationProps) {
-    let arr = new Array()
+    {allPages, currentPage, setCurrentPage}) {
+    let arr = []
     if (allPages <= 5) {
         arr = Array(allPages);
         for (let i = 0; i < arr.length; i++) {
@@ -32,7 +24,7 @@ export default function Pagination(
         arr =  [currentPage - 2,currentPage - 1,currentPage,currentPage + 1,currentPage + 2];
     }
 
-    function changePage(page : number) {
+    function changePage(page) {
         if (page <= 1) {
             setCurrentPage(1)
         } else if (page >= allPages) {
@@ -75,7 +67,7 @@ export default function Pagination(
                                     key={page_number}
                                     className={"relative inline-flex items-center border-y border-gray-300 bg-white  px-4 py-2" +
                                             " text-sm font-medium hover:bg-gray-200 text-gray-500 hover:text-[#FF8C32] " + (
-                                        page_number == currentPage
+                                        page_number === currentPage
                                             ? " text-[#FF8C32] border-[#FF8C32]"
                                             : ""
                                     )}
