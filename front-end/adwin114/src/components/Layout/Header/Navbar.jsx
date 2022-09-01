@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, {useState, useEffect} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars} from "@fortawesome/free-solid-svg-icons";
@@ -6,6 +7,7 @@ import { Link } from "react-router-dom";
 
 export default function Navbar({fixed}) {
     const [navbarOpen, setNavbarOpen] = useState(false);
+    // eslint-disable-next-line
     const [Color, setColor] = useState("[#06113C]");
     
     // const changeFontColor = () => {

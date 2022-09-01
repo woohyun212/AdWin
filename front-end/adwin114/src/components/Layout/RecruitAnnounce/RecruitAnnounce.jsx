@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import Header from "../Header";
 import Search from "./Search";
 import axios from "axios"
 import RecruitAnnounceList from "./RecruitAnnounceList";
@@ -31,12 +30,12 @@ export default function RecruitAnnounce() {
     };
     useEffect(() => {
         fetctPosts();
+    // eslint-disable-next-line
     }, [currentPage]);
 
     return (
         <div
             className="flex bg-[#FFFFFF] justify-center content-center w-screen h-screen">
-            <Header/>
             <div className="h-[90vh] w-[50%] mt-auto mx-auto">
                 <div className="flex pb-3 w-[85%] justify-center mx-auto">
                     <Search/>
