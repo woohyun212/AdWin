@@ -23,6 +23,7 @@
     },
     "include": [
       "src",
+      "postcss.config.js",
       "custom.d.ts"
     ]
 }

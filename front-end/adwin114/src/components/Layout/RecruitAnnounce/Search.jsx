@@ -14,7 +14,7 @@ const AREA_DATA = [
 
 const RECRUIT_TYPE_DATA = [
     { id: null, value: '정렬' },
-    { id: '0001', value: '사원' },
+    { id: '0001', value: '직원' },
     { id: '0002', value: '팀장' },
     { id: '0003', value: '본부장' },
     { id: '0004', value: '총괄' },

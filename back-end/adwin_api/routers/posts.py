@@ -62,7 +62,10 @@ async def get_post(post_id: str):
 @router.get("", response_description="Get 8 posts")
 async def get_8_posts(post_type: PostType, page_number: int = 1):
     _posts: list[dict] = await db.post_collection.find({"post_type": post_type},
-                                                       skip=(page_number - 1) * 8).to_list(length=8)
+                                                       skip=(page_number - 1) * 8,
+                                                       ) \
+        .sort("created_at", -1).to_list(length=8)
+    # post_type 필터링하고  page 만큼 스킵한다음에 정렬한다.? -> 어떻게든 됨.. 
     for _post in _posts:
         _post["user_name"] = (await get_user(_post["user_id"]))["username"]
         _post["likes"] = await get_likes_count(_post["_id"])
