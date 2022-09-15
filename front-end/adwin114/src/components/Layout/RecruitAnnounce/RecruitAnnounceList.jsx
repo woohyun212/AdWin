@@ -1,11 +1,9 @@
 import React from "react";
-
 import RecruitAnnounceCard from "./RecruitAnnounceCard";
 
 
 
 export default function RecruitAnnounceList({loading=false, error=null, posts=[]}) {
-
 
     if (loading) 
         return <div>로딩중..</div>;

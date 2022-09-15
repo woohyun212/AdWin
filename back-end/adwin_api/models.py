@@ -143,6 +143,17 @@ class RecruitType(str, Enum):
     Agency = "Agency"  # 대행사
 
 
+class AreaType(str, Enum):
+    seoul = '서울'
+    gyeonggi = '경기'
+    incheon = '인천'
+    gangwon = '강원'
+    chungcheong = '충청'
+    jeonla = '전라'
+    gyeongsang = '경상'
+    jeju = '제주'
+
+
 class PostModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     user_id: str
@@ -202,9 +213,29 @@ class LikesModelIn(BaseModel):
     user_id: str
 
     class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
-                    "target_id": "string",
-                    "user_id": "63086d10af036fc170696eec"
+                "target_id": "string",
+                "user_id": "63086d10af036fc170696eec"
+            }
+        }
+
+
+class LikesInitModel(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    target_id: str
+    ids_clicked_like: List = []
+    count: int = 0
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "target_id": "string"
             }
         }

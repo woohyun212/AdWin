@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 import database as db
 from authentication import is_valid
 from models import *
-from routers.likes import delete_like, get_likes_count
+from routers.likes import delete_like, get_likes_data
 from routers.users import get_user
 from utils import *
 
@@ -44,7 +44,9 @@ async def get_comments_in_post(post_id: str):
     for comment in comments:
         if comment is not None:
             comment["user_name"] = (await get_user(comment["user_id"]))["username"]
-            comment["likes"] = await get_likes_count(comment["_id"])
+            likes_data = await get_likes_data(comment["_id"])
+            comment["likes"] = likes_data["count"]
+            comment["is_liked"] = likes_data["ids_clicked_like"]
     return comments
 
 

@@ -1,7 +1,28 @@
 import datetime
+import encodings
 from pprint import pprint
 import math
+
 from routers.likes import initialize_likes
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+
+
+def get_string_from_html(html: str = "") -> str:
+    soup = BeautifulSoup(html, features="html.parser")
+    # kill all script and style elements
+    for script in soup(["script", "style"]):
+        script.extract()  # rip it out
+    # get text
+    text = soup.get_text()
+    # break into lines and remove leading and trailing space on each
+    lines = (line.strip() for line in text.splitlines())
+    # break multi-headlines into a line each
+    chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+    # drop blank lines
+    text = '\n'.join(chunk for chunk in chunks if chunk)
+    print(text)
+    return text
 
 
 async def drop_none(data: dict):
@@ -10,7 +31,7 @@ async def drop_none(data: dict):
 
 async def initialize_data(data: dict, **kwargs) -> None:
     data["created_at"] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    await initialize_likes(data["_id"])
+    await initialize_likes({"target_id": data["_id"]})
     if kwargs:
         for k, v in kwargs.items():
             data[k] = v

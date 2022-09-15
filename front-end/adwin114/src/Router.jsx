@@ -6,6 +6,7 @@ import Promotion from "components/Layout/Promotion";
 import RecruitAnnounce from "components/Layout/RecruitAnnounce";
 import RecruitAnnounceWrite from "components/Layout/RecruitAnnounce/RecruitAnnounceWrite";
 import RecruitAnnounceDetail from "components/Layout/RecruitAnnounce/RecruitAnnounceDetail";
+import RecruitAnnounceUpdate from "components/Layout/RecruitAnnounce/RecruitAnnounceUpdate";
 import LandingPage from "./LandingPage";
 import Header from "components/Layout/Header";
 
@@ -21,6 +22,7 @@ export default function Router() {
                 <Route path="/news" element={<News />}/>
                 <Route path="/community" element={<Community />}/>
                 <Route path="/recruit-announce/:post_id" element={<RecruitAnnounceDetail/>} />
+                <Route path="/recruit-announce/:post_id/update" element={<RecruitAnnounceUpdate />}/>
             </Routes>
         </BrowserRouter>
     );

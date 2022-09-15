@@ -6,7 +6,8 @@ from fastapi.responses import JSONResponse
 
 import database as db
 from authentication import is_valid
-from models import LikesModelIn
+from models import LikesModelIn, LikesInitModel
+from utils import *
 
 router = APIRouter(prefix='/likes',
                    tags=['Likes'],
@@ -14,11 +15,12 @@ router = APIRouter(prefix='/likes',
 
 
 @router.post("", response_description="Initialize a new like")
-async def initialize_likes(target_id: str):
-    if await db.like_collection.find_one({"target_id": target_id}) is None:
-        await db.like_collection.insert_one(
-            {"target_id": target_id, "ids_clicked_like": [], "count": 0}
-        )
+async def initialize_likes(init_data: LikesInitModel = Body(...)):
+    init_data = jsonable_encoder(init_data)
+    init_data["ids_clicked_like"] = []
+    init_data["count"] = 0
+    if await db.like_collection.find_one({"target_id": init_data["target_id"]}) is None:
+        await db.like_collection.insert_one(init_data)
         return 0
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The 'like' information already exists.")
 
@@ -32,7 +34,7 @@ async def likes_to_target(likes_data: LikesModelIn = Body(...)):
     """
     likes_data = jsonable_encoder(likes_data)
     if is_valid(likes_data["user_id"]):
-        like_doc = await db.like_collection.find_one({ "target_id": likes_data["target_id"]})
+        like_doc = await db.like_collection.find_one({"target_id": likes_data["target_id"]})
         if like_doc is not None:
             if likes_data["user_id"] not in like_doc["ids_clicked_like"]:
                 like_doc["ids_clicked_like"].append(likes_data["user_id"])
@@ -46,14 +48,14 @@ async def likes_to_target(likes_data: LikesModelIn = Body(...)):
 
 
 @router.get("", response_description="Get \"like\" count")
-async def get_likes_count(target_id: str):
+async def get_likes_data(target_id: str):
     """
     `Get` "like" count
     :param target_id:
     :return: int
     """
     if (like_doc := (await db.like_collection.find_one({"target_id": target_id}))) is not None:
-        return like_doc["count"]
+        return like_doc
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"request is invalid")
 
 

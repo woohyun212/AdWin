@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars} from "@fortawesome/free-solid-svg-icons";
 import {ReactComponent as AdWinLogo} from 'assets/WINAD.svg';
 import { Link } from "react-router-dom";
+import {  useLocation } from 'react-router-dom';
 
 export default function Navbar({fixed}) {
     const [navbarOpen, setNavbarOpen] = useState(false);
@@ -22,10 +23,9 @@ export default function Navbar({fixed}) {
     //     return() => {window.removeEventListener('scroll', changeFontColor);}
     // }, []);
 
-
     return (
         <nav
-            className={`w-full flex flex-wrap items-center justify-between border-b border-${Color} bg-transparent text-${Color} transition-color ease-in-out duration-500`}>
+            className={`h-[9vh] w-full flex flex-wrap items-center justify-between border-b border-${Color} bg-${useLocation().pathname=== '/' ? 'transparent' : 'white'} text-${Color} transition-color ease-in-out duration-500`}>
             <div
                 className="container px-4 mx-auto flex flex-wrap items-center justify-between">
                 <div
@@ -43,9 +43,9 @@ export default function Navbar({fixed}) {
                     </button>
                 </div>
                 <div
-                    className={"lg:flex flex-grow items-center" + (
+                    className={` lg:flex flex-grow items-center ` + (
                         navbarOpen
-                            ? " flex"
+                            ? " flex "
                             : " hidden"
                     )}>
 

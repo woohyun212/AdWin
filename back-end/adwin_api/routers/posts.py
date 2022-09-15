@@ -7,7 +7,7 @@ import database as db
 from authentication import is_valid
 from models import PostModelIn, UpdatePostModel, PostType, RecruitType
 from routers.comments import get_comments_in_post
-from routers.likes import delete_like, get_likes_count
+from routers.likes import delete_like, get_likes_data
 from routers.users import get_user
 from utils import *
 
@@ -24,13 +24,14 @@ async def create_post(post_type: PostType, post_data: PostModelIn = Body(...)):
     user_id = post_data["user_id"]
     if post_type == PostType.CounselorRecruit and post_data["recruit_type"] is None:
         raise HTTPException(status_code=400, detail="required parameter `recruit_type` missing")
-    if post_type != PostType.CounselorRecruit:
-        post_data["recruit_type"] = None
-        if post_type == PostType.RealEstateNews:
-            post_data["area"] = None
     if is_valid(user_id):
+        if post_type != PostType.CounselorRecruit:
+            post_data["recruit_type"] = None
+            if post_type == PostType.RealEstateNews:
+                post_data["area"] = None
         await initialize_data(data=post_data, post_type=post_type,
-                              recruit_type=post_data["recruit_type"], views=0)
+                              recruit_type=post_data["recruit_type"], views=0,
+                              preview=get_string_from_html(post_data["content"])[:30])
         new_post = await db.post_collection.insert_one(post_data)
         created_post = await db.post_collection.find_one({"_id": new_post.inserted_id})
         return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_post)
@@ -49,12 +50,17 @@ async def get_posts_count(post_type: PostType):
 
 
 @router.get("/{post_id}", response_description="Get a post")
-async def get_post(post_id: str):
+async def get_post_detail(post_id: str):
+    user_id = "63033dc1f7c78b7416dce005"
+    # TODO : 요청 header 든 이용해서 user_id 가져오기
     if (post_detail := await db.post_collection.find_one({"_id": post_id})) is not None:
         post_detail = await drop_none(post_detail)
         post_detail["user_name"] = (await get_user(post_detail["user_id"]))["username"]
         post_detail["comments"] = await get_comments_in_post(post_id)
-        post_detail["likes"] = await get_likes_count(post_id)
+        likes_data = await get_likes_data(post_id)
+        # pprint(likes_data)
+        post_detail["likes"] = likes_data["count"]
+        post_detail["is_liked"] = user_id in likes_data["ids_clicked_like"]
         return post_detail
     raise HTTPException(status_code=404, detail=f"Post {post_id} is not found")
 
@@ -63,12 +69,12 @@ async def get_post(post_id: str):
 async def get_8_posts(post_type: PostType, page_number: int = 1):
     _posts: list[dict] = await db.post_collection.find({"post_type": post_type},
                                                        skip=(page_number - 1) * 8,
-                                                       ) \
+                                                       projection={"content": False}) \
         .sort("created_at", -1).to_list(length=8)
-    # post_type 필터링하고  page 만큼 스킵한다음에 정렬한다.? -> 어떻게든 됨.. 
+    # post_type 필터링하고  page 만큼 스킵한다음에 정렬한다.? -> 어떻게든 됨..
     for _post in _posts:
         _post["user_name"] = (await get_user(_post["user_id"]))["username"]
-        _post["likes"] = await get_likes_count(_post["_id"])
+        _post["likes"] = (await get_likes_data(_post["_id"]))["count"]
         _post = await drop_none(_post)
     docs_count = await db.post_collection.count_documents({"post_type": post_type})
     res = {
@@ -83,6 +89,8 @@ async def get_8_posts(post_type: PostType, page_number: int = 1):
 async def update_post(post_id: str, update_data: UpdatePostModel = Body(...)):
     update_data = {k: v for k, v in update_data.dict().items() if v is not None}
     if update_data:
+        preview = get_string_from_html(update_data["content"])[:30]
+        update_data["preview"] = preview
         update_result = await db.post_collection.update_one({"_id": post_id}, {"$set": update_data})
         if update_result.modified_count == 1:
             if (updated_post := await db.post_collection.find_one({"_id": post_id})) is not None:

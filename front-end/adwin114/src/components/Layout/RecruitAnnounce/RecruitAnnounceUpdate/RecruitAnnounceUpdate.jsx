@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from 'ckeditor5/build/ckeditor';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const AREA_DATA = [
@@ -25,23 +25,22 @@ const RECRUIT_TYPE_DATA = [
     { id: "Agency", value: '대행사' },
     ];
 
+function changeRecruitTypeValueToId (_value) {
+    return RECRUIT_TYPE_DATA.filter(el => el.value === _value)[0]?.id; 
+}
     
 export default function RecruitAnnounceWrite() {
     let navigate = useNavigate();
-    
+    const {post_id} = useParams();
+
     const [selectedAreaValue, setSelectedAreaValue] = useState(
         '지역'
     );
     const [selectedRecruitTypeValue, setSelectedRecruitTypeValue] = useState(
         '정렬'
     );
-
-    const [postContents, setPostContents] = useState({
-        title: '',
-        content: '',
-        area: selectedAreaValue,
-        recruit_type: selectedRecruitTypeValue
-      })
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
     
     const handleDropArea = (e) => {
         const {value} = e.target;
@@ -50,22 +49,20 @@ export default function RecruitAnnounceWrite() {
     };
 
     const handleDropRecruitType = (e) => {
+        console.log(e.target);
         const {value} = e.target;
-        setSelectedRecruitTypeValue(RECRUIT_TYPE_DATA.filter(el => el.value === value)[0].id)
+        setSelectedRecruitTypeValue(value)
         console.log(selectedRecruitTypeValue)
     };
 
-    const handleChangePostContent = (e) => {
-        let _postContents = postContents;
-        if (!("getData" in e)){
-            _postContents.title = e.target.value;
-            setPostContents(_postContents);
-        }
-        else {
-            _postContents.content = e.getData();
-            setPostContents(_postContents);
-        }
-        console.log(postContents);
+    const handleChangeContent = (e) => {
+        setContent(e.getData());
+        console.log("content", content);
+    };
+
+    const handleChangeTitle = (e) => {
+        setTitle(e.target.value);
+        console.log("title", title);
     };
 
     const handelCancleButton = (e) => {
@@ -76,42 +73,63 @@ export default function RecruitAnnounceWrite() {
     const [response, setResponse] = useState("");
     const [error, setError] = useState(null);
     const handleSummbitButton = (e) =>{
-        
         if (window.confirm("제출 하시겠습니까?")) {
-            let copy_postContents = postContents;
-            copy_postContents.user_id = "63033dc1f7c78b7416dce005";
-            copy_postContents.area = selectedAreaValue;
-            copy_postContents.recruit_type = selectedRecruitTypeValue;
-            setPostContents(copy_postContents);
-            if (postContents.area === null || postContents.recruit_type === null){
+            let post = {
+                title: title,
+                content: content,
+                area: selectedAreaValue,
+                recruit_type: changeRecruitTypeValueToId(selectedRecruitTypeValue),
+                user_id : "63033dc1f7c78b7416dce005"
+              };
+            console.log(post);
+            if (post.area === null || post.recruit_type === null){
                 alert("지역과 모집 유형을 선택해주세요.");
                 return null;
-            } else if (postContents.title === ""){
+            } else if (post.title === ""){
                 alert("제목을 입력해주세요.");
                 return null;
-            } else if (postContents.content === ""){
+            } else if (post.content === ""){
                 alert("내용 입력해주세요.");
                 return null;
             }
             
-            const fetctPosts = async () => {
+            const fetctPatchPost = async () => {
                 try {
                     setError(null);
-                    const API_URI = `http://localhost:8000/posts?post_type=CounselorRecruit`
-                    setResponse(await axios.post(API_URI, postContents))
-                    console.log(response);
+                    const API_URI = `http://localhost:8000/posts/${post_id}`
+                    setResponse(await axios.patch(API_URI, post))
+                    // console.log(response);
                 } catch (e) {
                     setError(e);
                     alert(e.response.data.detail[0].msg);
-
                 }
 
             };
-            fetctPosts();
-            navigate('/recruit-announce'); 
+            fetctPatchPost();
+            navigate(`/recruit-announce/${post_id}`); 
           }
     };
 
+    const fetctGetPost = async () => {
+        try {
+            setError(null);
+            const API_URI = `http://localhost:8000/posts/${post_id}`
+            const response = await axios.get(API_URI);
+            response.data.recruit_type = RECRUIT_TYPE_DATA.filter(el => el.id === response.data.recruit_type)[0].value;
+            setTitle(response.data.title);
+            setContent(response.data.content);
+            setSelectedAreaValue(response.data.area);
+            setSelectedRecruitTypeValue((response.data.recruit_type));
+        } catch (e) {
+            setError(e);
+        }
+        
+    };
+
+    useEffect(() => {
+        fetctGetPost();
+    // eslint-disable-next-line
+    }, []);
 
 
     return (
@@ -125,7 +143,8 @@ export default function RecruitAnnounceWrite() {
                         <select
                         onChange={handleDropArea} 
                         className='flex mx-2 h-full justify-center items-center px-2 border-[#BBBBBB]
-                                    font-normal white-space-no-wrap text-gray-800 '>
+                                    font-normal white-space-no-wrap text-gray-800 '
+                        value={selectedAreaValue}>
                         { AREA_DATA.map(el => { 
                             return <option key={el.id}>{el.value}</option>; }) }
                         </select>
@@ -135,7 +154,8 @@ export default function RecruitAnnounceWrite() {
                         <select
                         onChange={handleDropRecruitType}
                         className='flex mx-1 h-full justify-center items-center px-2 border-[#BBBBBB] 
-                        font-normal white-space-no-wrap text-gray-800 '>{
+                        font-normal white-space-no-wrap text-gray-800 '
+                        value={selectedRecruitTypeValue}>{
                         RECRUIT_TYPE_DATA.map(el => {
                                 return <option key={el.id}>{el.value}</option>;
                         })
@@ -146,33 +166,33 @@ export default function RecruitAnnounceWrite() {
                 <div className='flex flex-row'>
                     <label htmlFor="title" className="text-2xl font-bold text-gray-900 whitespace-nowrap mr-4">제목</label>
                     <input
-                    onChange={handleChangePostContent}
+                    onChange={handleChangeTitle}
                     type="text"
                     id="title"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
                         focus:ring-blue-500 focus:border-blue-500 w-full py-2.5"
                     placeholder="제목을 입력하세요"
-                    required="required"/>
+                    required="required"
+                    defaultValue={title}/>
                 </div>
                 <CKEditor editor={ClassicEditor}
-                placeholder="??"
-                data=""
+                data={content}
                 onReady={editor => {
                     // You can store the "editor" and use when it is needed.
-                    console.log('Editor is ready to use!', editor);
+                    // console.log('Editor is ready to use!', editor);
                     editor.ui.view.editable.element.style.minHeight = "30vh";
                 }}
                 onChange={(event, editor) => {
                     // const data = editor.getData();
                     // console.log({event, editor, data});
-                    handleChangePostContent(editor);
+                    handleChangeContent(editor);
                 }}
                 onBlur={(event, editor) => {
-                    console.log('Blur.', editor);
+                    // console.log('Blur.', editor);
                     editor.ui.view.editable.element.style.maxHeight = "500px";
                 }}
                 onFocus={(event, editor) => {
-                    console.log('Focus.', editor);
+                    // console.log('Focus.', editor);
                     editor.ui.view.editable.element.style.minHeight = "30vh";
                     editor.ui.view.editable.element.style.maxHeight = "500px";
                 }}/>
