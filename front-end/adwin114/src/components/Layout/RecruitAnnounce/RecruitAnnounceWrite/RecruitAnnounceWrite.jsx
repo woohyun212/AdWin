@@ -3,6 +3,7 @@ import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from 'ckeditor5/build/ckeditor';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_ORIGIN } from "components/APIRequest/APIRequest";
 
 const AREA_DATA = [
     { id: null, value: '지역을 선택해주세요' },
@@ -97,7 +98,7 @@ export default function RecruitAnnounceWrite() {
             const fetctPosts = async () => {
                 try {
                     setError(null);
-                    const API_URI = `http://localhost:8000/posts?post_type=CounselorRecruit`
+                    const API_URI = `${API_ORIGIN}/posts?post_type=CounselorRecruit`
                     setResponse(await axios.post(API_URI, postContents))
                     console.log(response);
                 } catch (e) {

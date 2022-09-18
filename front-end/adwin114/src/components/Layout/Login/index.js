@@ -1,1 +1,1 @@
-export {defalut} from './Login'
+export {default} from "./Login"

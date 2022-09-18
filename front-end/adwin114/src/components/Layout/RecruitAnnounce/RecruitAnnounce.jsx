@@ -4,7 +4,7 @@ import Search from "./Search";
 import axios from "axios"
 import RecruitAnnounceList from "./RecruitAnnounceList";
 import Pagination from "./Pagination/Pagination";
-
+ import { API_ORIGIN } from "components/APIRequest/APIRequest";
 
 export default function RecruitAnnounce() {
     const [posts, setposts] = useState([]);
@@ -18,7 +18,7 @@ export default function RecruitAnnounce() {
             setError(null);
             setposts([]);
             setLoading(true);
-            const API_URI = `http://localhost:8000/posts?post_type=CounselorRecruit&page_number=${currentPage}`
+            const API_URI = `${API_ORIGIN}/posts?post_type=CounselorRecruit&page_number=${currentPage}`
             const response = await axios.get(API_URI);
             console.log(response.data["posts"]);
             setposts(response.data["posts"]);
