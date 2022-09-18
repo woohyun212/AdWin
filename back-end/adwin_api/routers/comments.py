@@ -39,6 +39,7 @@ async def get_comments_in_post(post_id: str):
     :type post_id: str
     :param post_id: ID of the post
     """
+    user_id = "63033dc1f7c78b7416dce005"
     comments = [await drop_none(comment) async for comment in
                 db.comment_collection.find({"post_id": post_id})]
     for comment in comments:
@@ -46,7 +47,7 @@ async def get_comments_in_post(post_id: str):
             comment["user_name"] = (await get_user(comment["user_id"]))["username"]
             likes_data = await get_likes_data(comment["_id"])
             comment["likes"] = likes_data["count"]
-            comment["is_liked"] = likes_data["ids_clicked_like"]
+            comment["is_liked"] = user_id in likes_data["ids_clicked_like"]
     return comments
 
 
@@ -79,3 +80,14 @@ async def delete_comment(comment_id: str):
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={"config": "Comment has been deleted successfully"})
     raise HTTPException(status_code=404, detail=f"Comment {comment_id} is not found")
+
+
+async def delete_comment_in_post(post_id: str):
+    if (comments_cursor := db.comment_collection.find({"post_id": post_id})) is not None:
+        async for comment in comments_cursor:
+            await delete_like(comment["_id"])
+        result = db.comment_collection.delete_many({"post_id": post_id})
+
+        return JSONResponse(status_code=status.HTTP_200_OK,
+                            content={"config": "Comments have been deleted successfully"})
+    raise HTTPException(status_code=404, detail=f"Comments are not found in Post")

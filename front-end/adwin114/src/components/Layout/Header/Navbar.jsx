@@ -66,7 +66,7 @@ export default function Navbar({fixed}) {
                             <Item title="문의사항" to="/qna"/>
                         </li>
                     </ul>
-                    <Item title="로그인" to="/" addClass="px-3 py-2"/>
+                    <Item title="로그인" to="/login" addClass="px-3 py-2"/>
                     <Item
                         title="회원가입"
                         to="/"

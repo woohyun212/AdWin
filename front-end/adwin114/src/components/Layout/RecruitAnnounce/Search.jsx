@@ -21,14 +21,7 @@ const RECRUIT_TYPE_DATA = [
     { id: '0005', value: '대행사' },
     ];
 
-const RECRUIT_ = [
-    { id: null, value: '정렬' },
-    { id: '0001', value: '직원' },
-    { id: '0002', value: '팀장' },
-    { id: '0003', value: '본부장' },
-    { id: '0004', value: '총괄' },
-    { id: '0005', value: '대행사' },
-    ];
+
 
 export default function SearchBar() {
     const [selectedAreaValue, setSelectedAreaValue] = useState(

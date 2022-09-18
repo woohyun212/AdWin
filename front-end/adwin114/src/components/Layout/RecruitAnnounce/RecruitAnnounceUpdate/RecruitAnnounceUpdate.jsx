@@ -3,6 +3,7 @@ import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from 'ckeditor5/build/ckeditor';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { API_ORIGIN } from 'components/APIRequest/APIRequest';
 
 const AREA_DATA = [
     { id: null, value: '지역을 선택해주세요' },
@@ -96,12 +97,13 @@ export default function RecruitAnnounceWrite() {
             const fetctPatchPost = async () => {
                 try {
                     setError(null);
-                    const API_URI = `http://localhost:8000/posts/${post_id}`
+                    const API_URI = `${API_ORIGIN}/posts/${post_id}`
                     setResponse(await axios.patch(API_URI, post))
                     // console.log(response);
                 } catch (e) {
                     setError(e);
-                    alert(e.response.data.detail[0].msg);
+                    alert(e.response.data.detail);
+                    console.log(e.response.data);
                 }
 
             };
@@ -113,7 +115,7 @@ export default function RecruitAnnounceWrite() {
     const fetctGetPost = async () => {
         try {
             setError(null);
-            const API_URI = `http://localhost:8000/posts/${post_id}`
+            const API_URI = `${API_ORIGIN}/posts/${post_id}`
             const response = await axios.get(API_URI);
             response.data.recruit_type = RECRUIT_TYPE_DATA.filter(el => el.id === response.data.recruit_type)[0].value;
             setTitle(response.data.title);

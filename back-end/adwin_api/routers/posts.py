@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 import database as db
 from authentication import is_valid
 from models import PostModelIn, UpdatePostModel, PostType, RecruitType
-from routers.comments import get_comments_in_post
+from routers.comments import get_comments_in_post, delete_comment_in_post
 from routers.likes import delete_like, get_likes_data
 from routers.users import get_user
 from utils import *
@@ -31,7 +31,8 @@ async def create_post(post_type: PostType, post_data: PostModelIn = Body(...)):
                 post_data["area"] = None
         await initialize_data(data=post_data, post_type=post_type,
                               recruit_type=post_data["recruit_type"], views=0,
-                              preview=get_string_from_html(post_data["content"])[:30])
+                              preview=get_string_from_html(post_data["content"])[:30],
+                              thumbnail=get_thumbnail_from_html(post_data["content"]))
         new_post = await db.post_collection.insert_one(post_data)
         created_post = await db.post_collection.find_one({"_id": new_post.inserted_id})
         return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_post)
@@ -61,6 +62,7 @@ async def get_post_detail(post_id: str):
         # pprint(likes_data)
         post_detail["likes"] = likes_data["count"]
         post_detail["is_liked"] = user_id in likes_data["ids_clicked_like"]
+        await db.post_collection.update_one({"_id": post_id}, {"$set": {"views": post_detail["views"] + 1}})
         return post_detail
     raise HTTPException(status_code=404, detail=f"Post {post_id} is not found")
 
@@ -89,13 +91,13 @@ async def get_8_posts(post_type: PostType, page_number: int = 1):
 async def update_post(post_id: str, update_data: UpdatePostModel = Body(...)):
     update_data = {k: v for k, v in update_data.dict().items() if v is not None}
     if update_data:
-        preview = get_string_from_html(update_data["content"])[:30]
-        update_data["preview"] = preview
+        update_data["preview"] = get_string_from_html(update_data["content"])[:30]
+        update_data["thumbnail"] = get_thumbnail_from_html(update_data["content"])
         update_result = await db.post_collection.update_one({"_id": post_id}, {"$set": update_data})
         if update_result.modified_count == 1:
             if (updated_post := await db.post_collection.find_one({"_id": post_id})) is not None:
                 return updated_post
-    if (existing_post := await db.user_collection.find_one({"_id": post_id})) is not None:
+    if (existing_post := await db.post_collection.find_one({"_id": post_id})) is not None:
         return existing_post
     raise HTTPException(status_code=404, detail=f"Post {post_id} is not found")
 
@@ -105,6 +107,7 @@ async def delete_post(post_id: str):
     if await db.post_collection.find_one({"_id": post_id}) is not None:
         await db.post_collection.delete_one({"_id": post_id})
         await delete_like(post_id)
+        await delete_comment_in_post(post_id)
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={"config": "Post has been deleted successfully"})
     raise HTTPException(status_code=404, detail=f"Post {post_id} is not found")
