@@ -48,6 +48,7 @@ async def get_comments_in_post(post_id: str):
             likes_data = await get_likes_data(comment["_id"])
             comment["likes"] = likes_data["count"]
             comment["is_liked"] = user_id in likes_data["ids_clicked_like"]
+    comments.reverse()
     return comments
 
 
