@@ -34,9 +34,9 @@ export default function CommentBlock({comment}) {
     return (
         <div className="">
             {/* <div className="flex flex-col w-1/2 items-center mx-auto"> */}
-            <div className="flex flex-row h-[8vh] gap-3 self-center mt-2">
+            <div className="flex flex-row h-[6vh] gap-3 self-center mt-2">
                 <img
-                    className="h-16 aspect-square rounded-full bg-gray-400 self-center"
+                    className="h-[6vh] aspect-square rounded-full bg-gray-400 self-center"
                     alt="프로필 사진"
                     src={""}/>
                 <p className="text-center self-center">

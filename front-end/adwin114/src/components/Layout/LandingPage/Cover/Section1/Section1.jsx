@@ -23,28 +23,28 @@ export default function Section1() {
 
                         <div className="grid grid-cols-2 gap-2 gap-y-5 justify-center justify-items-center">
                             <Link
-                                to="/recruit-announce?area=서울"
+                                to="/recruit-announce?area=Seoul"
                                 className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">서울특별시</Link>
                             <Link
-                                to="/recruit-announce?area=ㅅ"
+                                to="/recruit-announce?area=GyeongIn"
                                 className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">경기·인천</Link>
 
                             <Link
-                                to="/recruit-announce?area=ㅅ"
+                                to="/recruit-announce?area=BuUlGyeong"
                                 className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">부산·울산·경남</Link>
                             <Link
-                                to="/recruit-announce?area=ㅅ"
+                                to="/recruit-announce?area=DaeGyeong"
                                 className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">대구·경북</Link>
 
                             <Link
-                                to="/recruit-announce?area=ㅅ"
+                                to="/recruit-announce?area=DaeChung"
                                 className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">대전·충청</Link>
                             <Link
-                                to="/recruit-announce?area=ㅅ"
+                                to="/recruit-announce?area=GwangJeol"
                                 className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">광주·전라</Link>
                         </div>
                         <Link
-                                to="/recruit-announce?area=ㅅ"
+                                to="/recruit-announce?area=GangJe"
                                 className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">강원·제주</Link>
 
                     </div>
