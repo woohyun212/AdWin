@@ -11,7 +11,7 @@ export default function Section1() {
         <section
             className="m-auto flex flex-col h-screen w-screen snap-start items-center justify-center text-white space-y-16 ">
             <Search/>
-            <div className="grid grid-cols-2 sm:grid-flow-row gap-4 text-[#06113C] text-xl">
+            <div className="grid grid-cols-2 gap-4 text-[#06113C]">
                 <div
                     className="flex flex-col static bg-white w-[20vh] aspect-square text-black justify-center items-center">
                     <p className="text-base">분양 상담사 모집</p>
