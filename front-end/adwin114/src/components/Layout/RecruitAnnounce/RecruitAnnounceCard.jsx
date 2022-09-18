@@ -17,6 +17,7 @@ function changeRecruitTypeIdToValue (_id) {
 export default function RecruitAnnounceCard({
     post
 }) {
+    console.log(post.title,post.thumbnail)
     return (
         <Link to={post._id} className="flex flex-row h-[12.5%] w-full">
             <span className="flex flex-col w-[10%] items-center justify-center h-full">
@@ -41,8 +42,8 @@ export default function RecruitAnnounceCard({
             <div className="flex left-0 items-center h-full w-[15%]">
                 <div className="flex w-full h-5/6 bg-[#D9D9D9] overflow-hidden">
                     {
-                        post.thumnailUrl !== undefined
-                            ? <img src={post.thumnailUrl} alt="" className="flex grow object-cover"/>
+                        post.thumbnail !== undefined
+                            ? <img src={post.thumbnail} alt="" className="flex grow object-cover"/>
                             : null
                     }
                 </div>
