@@ -35,6 +35,7 @@ async def create_comment(post_id: str, comment_data: CommentModelIn = Body(...))
 @router.get("/{post_id}/comments", response_description="List all comments in post",
             response_model=List[CommentModelOut])
 async def get_comments_in_post(post_id: str):
+    user_id = "63033dc1f7c78b7416dce005"
     """
     :type post_id: str
     :param post_id: ID of the post
