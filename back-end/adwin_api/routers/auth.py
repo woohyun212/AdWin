@@ -13,7 +13,7 @@ test_user = {
 
 }
 
-router = APIRouter(prefix='/login',
+router = APIRouter(prefix='/auth',
                    tags=['Login'])
 
 
@@ -22,13 +22,22 @@ class LoginItem(BaseModel):
     password: str
 
 
-@router.get("")
-def read_root():
-    return {"Hello": "World"}
 
-
-@router.post("")
+@router.post("login")
 async def user_login(loginitem: LoginItem):
+    data = jsonable_encoder(loginitem)
+
+    if data['username'] == test_user['username'] and data['password'] == test_user['password']:
+
+        encoded_jwt = jwt.encode(data, SECERT_KEY, algorithm=ALGORITHM)
+        return {"token": encoded_jwt}
+
+    else:
+        return {"message": "login failed"}
+
+
+@router.post("register")
+async def user_register(loginitem: LoginItem):
     data = jsonable_encoder(loginitem)
 
     if data['username'] == test_user['username'] and data['password'] == test_user['password']:

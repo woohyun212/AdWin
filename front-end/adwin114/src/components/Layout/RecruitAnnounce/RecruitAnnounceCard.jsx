@@ -17,7 +17,6 @@ function changeRecruitTypeIdToValue (_id) {
 export default function RecruitAnnounceCard({
     post
 }) {
-    console.log(post.title,post.thumbnail)
     return (
         <Link to={post._id} className="flex flex-row h-[12.5%] w-full">
             <span className="flex flex-col w-[10%] items-center justify-center h-full">
