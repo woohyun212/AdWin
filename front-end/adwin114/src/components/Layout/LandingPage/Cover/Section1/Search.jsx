@@ -6,7 +6,7 @@ export default function Search() {
     return (
         <>
         <form
-            className="flex w-[45vw] px-4 flex-wrap items-stretch">
+            className="flex sm:w-[60vw] md:w-[45vw] px-4 flex-wrap items-stretch">
             <div className="flex">
                 <span
                     className="font-normal leading-snug flex text-center white-space-no-wrap
