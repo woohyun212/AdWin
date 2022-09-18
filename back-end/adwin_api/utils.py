@@ -21,15 +21,8 @@ def get_string_from_html(html: str = "") -> str:
     chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
     # drop blank lines
     text = '\n'.join(chunk for chunk in chunks if chunk)
+    print(text)
     return text
-
-
-def get_thumbnail_from_html(html: str = "") -> str:
-    soup = BeautifulSoup(html, features="html.parser")
-    # get image in base64 format
-    if (img := soup.find('img')) is not None:
-        return img['src']
-    return ""
 
 
 async def drop_none(data: dict):

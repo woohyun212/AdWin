@@ -3,8 +3,6 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import {ReactComponent as SpeechBubble } from 'images/speech-bubble-svgrepo-com.svg';
 import { Link } from 'react-router-dom';
-import Comment from 'components/Layout/Comment';
-import { API_ORIGIN } from 'components/APIRequest/APIRequest';
 
 const RECRUIT_TYPE_DATA = [
     { id: "SalesPerson", value: '직원' },
@@ -18,8 +16,8 @@ export default function RecruitAnnounceDetail() {
     let { post_id } = useParams();
     let navigate = useNavigate();
 
-    const [Likes, setLikes] = useState(0);
-    const [isLiked, setIsLiked] = useState(false);
+    const [Likes, setLikes] = useState();
+    const [isLiked, setIsLiked] = useState(0);
     const [postDetail, setPostDetail] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -28,37 +26,40 @@ export default function RecruitAnnounceDetail() {
             setError(null);
             setPostDetail({});
             setLoading(true);
-            const API_URI = `${API_ORIGIN}/posts/${post_id}`
+            const API_URI = `http://localhost:8000/posts/${post_id}`
             const response = await axios.get(API_URI);
             response.data.recruit_type = RECRUIT_TYPE_DATA.filter(el => el.id === response.data.recruit_type)[0].value;
 
             setPostDetail(response.data);
             setIsLiked(response.data.is_liked);
             setLikes(response.data.likes);
+            
+            // console.log(response.data);
         } catch (e) {
             setError(e);
         }
         setLoading(false);
     };
     
-    const likePost = async () => {
+    const fetctLike = async () => {
+        const user_id = "63033dc1f7c78b7416dce005"
+        try {
+            const API_URI = `http://localhost:8000/likes`
+            const response = await axios.put(API_URI, {
+                "target_id": post_id,
+                "user_id": user_id
+              }
+            );
+        } catch (e) {
+            console.log(e)
+        }
+    };
+
+    const like = async () => {
         if (isLiked){
             alert("좋아요는 한번만 누를 수 있습니다!")
             return;
         }
-        const fetctLike = async () => {
-            const user_id = "63033dc1f7c78b7416dce005"
-            try {
-                const API_URI = `${API_ORIGIN}/likes`
-                const response = await axios.put(API_URI, {
-                    "target_id": post_id,
-                    "user_id": user_id
-                  }
-                );
-            } catch (e) {
-                console.log(e)
-            }
-        };
         fetctLike();
         setIsLiked(!isLiked);
         setLikes(Likes+1);
@@ -69,29 +70,12 @@ export default function RecruitAnnounceDetail() {
     // eslint-disable-next-line
     }, [post_id]);
 
-    const deletePost = async () => {
-        const fetctDeletePost = async () => {
-            const user_id = "63033dc1f7c78b7416dce005"
-            try {
-                const API_URI = `${API_ORIGIN}/posts/${post_id}`
-                const response = await axios.delete(API_URI);
-            } catch (e) {
-                console.log(e)
-            }
-        };
-        if (window.confirm("삭제 하시겠습니까?")) {
-            fetctDeletePost();
-            navigate("../recruit-announce")
-        }
-    };
-
     return(
         <div  className="flex flex-col bg-[#FFFFFF] pt-[0vh] w-screen h-screen overflow-scroll">
-            <div className="flex w-full sm:w-[75%] lg:w-[55%] mt-[14vh] mx-auto h-auto \  
-            justify-center content-center border-t-black border-t ">
-                {/* 글 내용 들어가는 곳 */}
-                <div className="flex flex-col w-full overflow-x-hidden border-x border-black ">
-                    <div className='flex flex-row w-full my-4 gap-6 mx-4'>
+            <div className="flex w-full sm:w-[75%] lg:w-[55%] mt-[7vh] mx-auto h-[90%] 
+            justify-center content-center ">
+                <div className="flex flex-col h-full w-full overflow-x-hidden border-x border-black">
+                    <div className='flex flex-row w-full my-4 mt-9 gap-6 mx-4'>
                         <span className="flex flex-col text-3xl justify-center content-center w-[10%]">
                             <p className="whitespace-nowrap justify-center mx-auto">
                             {postDetail.area}
@@ -104,7 +88,7 @@ export default function RecruitAnnounceDetail() {
                         <Link to="update" className=' self-center align-middle'>
                                 <p className='whitespace-nowrap px-4 py-[0.75rem] h-12 bg-[#FF8C32] rounded-md'>글 수정</p>
                         </Link>
-                        <button type='button' onClick={deletePost} className="h-12 px-3 whitespace-nowrap self-center \
+                        <button type='button' onClick={like} className="h-12 px-3 whitespace-nowrap self-center \
                              bg-[#EEEEEE] border border-[#CCCCCC] rounded-md align-middle float-right">글 삭제</button>  
                     </div>
                     <hr className=' border-black'/>
@@ -118,25 +102,27 @@ export default function RecruitAnnounceDetail() {
                 </div>
                 {/* <div className='flex bg-gray-300 w-36 h-72 ml-8 my-auto'>아마이건광고일거야</div> */}
             </div>
-            <div className='flex flex-col w-full sm:w-[75%] lg:w-[55%] self-center'>
-                <div className='flex flex-col mx-auto w-full border-x border-black'>
-                    <div className='flex flex-row w-full h-[10vh] mt-20'>
-                        <div className="flex w-full gap-6 justify-center">
-                            <div className="flex flex-row gap-2 ">
-                                <div className="flex w-5"><SpeechBubble/></div>
-                                <div className="flex text-2xl justify-center items-center  ">{postDetail.comments?.length}</div>
-                            </div>
-                            <div className="flex text-2xl flex-row gap-2">
-                                <button type='button' onClick={likePost} className={"transition-all ease-in-out duration-500" + (isLiked ? " text-red-600":"")} >
-                                    {isLiked ? "♥" : "♡"}</button>
-                                <div className="flex text-2xl justify-center items-center">{Likes}</div>
-                            </div>
-                        </div>    
+            <div className='flex flex-col w-full'>
+                <div className='flex justify-center mx-auto w-full h-screen'>
+                    <div className='flex flex-row h-[7%] w-full '>
+                        <div className="flex w-full justify-center "></div>
+                        <div className="flex w-full gap-6 justify-center ">
+                                <div className="flex flex-row gap-2 ">
+                                    <div className="flex w-5"><SpeechBubble/></div>
+                                    <div className="flex text-2xl justify-center items-center  ">{postDetail.comments?.length}</div>
+                                </div>
+                                <div className="flex text-2xl flex-row gap-2">
+                                    <button type='button' onClick={like} className={"transition-all ease-in-out duration-500" + (isLiked ? " text-red-600":"")} >
+                                        {isLiked ? "♥" : "♡"}</button>
+                                    <div className="flex text-2xl justify-center items-center">{Likes}</div>
+                                </div>
+                        </div>
+                        <div className="flex w-full justify-start align-middle">
+                            
+                        </div>
                     </div>
                 </div>
             </div>
-            <hr className='border-black '></hr>
-            <Comment comments={postDetail.comments} />
         </div>
     )
 }

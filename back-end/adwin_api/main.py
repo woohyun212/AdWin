@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import database as db
 import models
-from routers import users, posts, comments, likes, login
+from routers import users, posts, comments, likes
 import utils
 
 app = FastAPI()
@@ -12,20 +12,15 @@ allowed_origins = [
     "http://localhost",
     "http://localhost:3000",
     "http://localhost:8000",
-    "http://192.168.0.2",
-    "http://192.168.0.*:3000",
-    "http://192.168.0.*:8000",
-    "http://182.227.119.180",
-    "http://182.227.119.180:8000",
-    "http://xn--sr3b80m.xn--hy1b562alhb.xn--h32bi4v.xn--3e0b707e"
 ]
+
 
 # CORSMiddleware
 app.add_middleware(
     CORSMiddleware,
-    allow_methods=["*"],
-    allow_credentials=True,
     allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -33,7 +28,6 @@ app.include_router(users.router)
 app.include_router(posts.router)
 app.include_router(comments.router)
 app.include_router(likes.router)
-app.include_router(login.router)
 
 
 @app.get("/all_users", response_description="List all users",
@@ -59,6 +53,6 @@ async def get_all_posts(post_type: models.PostType | None = None):
 
 
 @app.get("/all_comments", response_description="List all comments",
-         tags=['All'])
+         response_model=models.List[models.CommentModelOut], tags=['All'])
 async def get_all_comments():
     return [await utils.drop_none(comment) async for comment in db.comment_collection.find()]

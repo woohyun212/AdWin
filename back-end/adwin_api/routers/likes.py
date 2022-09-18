@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 
 import database as db
 from authentication import is_valid
-from models import LikesModelIn, LikesInitModel, PyObjectId
+from models import LikesModelIn, LikesInitModel
 from utils import *
 
 router = APIRouter(prefix='/likes',
@@ -15,14 +15,13 @@ router = APIRouter(prefix='/likes',
 
 
 @router.post("", response_description="Initialize a new like")
-async def initialize_likes(init_data=Body(...)):
+async def initialize_likes(init_data: LikesInitModel = Body(...)):
     init_data = jsonable_encoder(init_data)
-    init_data["_id"]: PyObjectId
-    init_data["count"] = 0
     init_data["ids_clicked_like"] = []
+    init_data["count"] = 0
     if await db.like_collection.find_one({"target_id": init_data["target_id"]}) is None:
         await db.like_collection.insert_one(init_data)
-        return init_data
+        return 0
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The 'like' information already exists.")
 
 

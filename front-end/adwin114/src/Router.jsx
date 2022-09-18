@@ -9,9 +9,6 @@ import RecruitAnnounceDetail from "components/Layout/RecruitAnnounce/RecruitAnno
 import RecruitAnnounceUpdate from "components/Layout/RecruitAnnounce/RecruitAnnounceUpdate";
 import LandingPage from "./LandingPage";
 import Header from "components/Layout/Header";
-import Login from "components/Layout/Login/Login";
-import Profile from "components/Layout/Porfile/Profile";
-import {RequireToken} from "./Auth";
 
 export default function Router() {
     return (
@@ -24,11 +21,8 @@ export default function Router() {
                 <Route path="/promotion" element={<Promotion />}/>
                 <Route path="/news" element={<News />}/>
                 <Route path="/community" element={<Community />}/>
-                <Route path="/recruit-announce/:post_id" element={<RecruitAnnounceDetail/>}/>
-                <Route path="/recruit-announce/:post_id/update" element={<RecruitAnnounceUpdate/>}/>
-                <Route path="/login" element={<Login/>}/>
-                <Route path="/profile" element={<RequireToken ><Profile/></RequireToken>}
-                />
+                <Route path="/recruit-announce/:post_id" element={<RecruitAnnounceDetail/>} />
+                <Route path="/recruit-announce/:post_id/update" element={<RecruitAnnounceUpdate />}/>
             </Routes>
         </BrowserRouter>
     );
