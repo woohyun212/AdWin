@@ -43,7 +43,7 @@ export default function RecruitAnnounceCard({
                 <div className="flex w-full h-5/6 bg-[#D9D9D9] overflow-hidden">
                     {
                         post.thumbnail !== undefined
-                            ? <img src={post?.thumbnail} alt="" className="flex grow object-cover"/>
+                            ? <img src={post.thumbnail} alt="" className="flex grow object-cover"/>
                             : null
                     }
                 </div>

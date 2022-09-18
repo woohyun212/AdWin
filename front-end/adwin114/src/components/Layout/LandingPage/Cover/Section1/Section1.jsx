@@ -11,35 +11,50 @@ export default function Section1() {
         <section
             className="m-auto flex flex-col h-screen w-screen snap-start items-center justify-center text-white space-y-16 ">
             <Search/>
-            <div className="grid grid-cols-2 gap-4 text-[#06113C] text-xl">
-                <Link to="promotion">
-                    <span
-                        className='flex flex-col justify-center items-center border-solid w-[5vw] h-[5vw] bg-white
-                    leading-8 py-2 cursor-pointer hover:bg-[#FF8C32] hover:fill-slate-100 hover:text-slate-100 transition-colors ease-out text-base'>
-                        <OfficeBuilding className='w-full h-auto '/>분양홍보
-                    </span>
-                </Link>
-                <Link to="community">
-                    <span
-                        className='flex flex-col justify-center text-center items-center border-solid w-[5vw] h-[5vw] bg-white  py-1
-                        cursor-pointer hover:bg-[#FF8C32] hover:fill-[#FF8C32] hover:text-slate-100 transition-colors ease-out text-base'>
-                        <Annotation className='h-1/2'/>커뮤니티
-                    </span>
-                </Link>
-                <Link to="news">
-                    <span
-                        className='flex flex-col justify-center text-center items-center border-solid w-[5vw] h-[5vw] bg-white  py-1
-                        cursor-pointer hover:bg-[#FF8C32] hover:fill-slate-100 hover:text-slate-100 transition-colors ease-out text-base'>
-                        <Newspaper className='h-full'/>뉴스
-                    </span>
-                </Link>
-                <Link to="recruit-announce">
-                    <span
-                        className='flex flex-col justify-center text-center items-center border-solid w-[5vw] h-[5vw] bg-white  py-1
-                        cursor-pointer hover:bg-[#FF8C32] hover:text-slate-100 transition-colors ease-out text-base'>
-                        분양<br/>상담사<br/>모집
-                    </span>
-                </Link>
+            <div className="grid grid-cols-2 sm:grid-flow-row gap-4 text-[#06113C] text-xl">
+                <div
+                    className="flex flex-col static bg-white w-[20vh] aspect-square text-black justify-center items-center">
+                    <p className="text-base">분양 상담사 모집</p>
+                    <p className="text-xl ">지역별</p>
+                    <div
+                        className="flex flex-col gap-3 absolute hover:bg-[#FF8C32] w-[20vh] aspect-square
+                     text-transparent hover:text-white justify-center items-center transition-color ease-in-out duration-150">
+                        <p className="text-base">지역별</p>
+
+                        <div className="grid grid-cols-2 gap-2 gap-y-5 justify-center justify-items-center">
+                            <Link
+                                to="/recruit-announce?area=서울"
+                                className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">서울특별시</Link>
+                            <Link
+                                to="/recruit-announce?area=ㅅ"
+                                className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">경기·인천</Link>
+
+                            <Link
+                                to="/recruit-announce?area=ㅅ"
+                                className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">부산·울산·경남</Link>
+                            <Link
+                                to="/recruit-announce?area=ㅅ"
+                                className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">대구·경북</Link>
+
+                            <Link
+                                to="/recruit-announce?area=ㅅ"
+                                className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">대전·충청</Link>
+                            <Link
+                                to="/recruit-announce?area=ㅅ"
+                                className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">광주·전라</Link>
+                        </div>
+                        <Link
+                                to="/recruit-announce?area=ㅅ"
+                                className="area whitespace-nowrap text-xs hover:text-base transition-all ease-in-out duration-150">강원·제주</Link>
+
+                    </div>
+                </div>
+
+                <div
+                    className="flex flex-col static bg-white w-[20vh] aspect-square text-black justify-center items-center">
+                    <p className="text-base">분양 상담사 모집</p>
+                    <p className="text-xl">물건별</p>
+                </div>
             </div>
         </section>
     )
