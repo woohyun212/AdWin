@@ -10,7 +10,7 @@ import RecruitAnnounceUpdate from "components/Layout/RecruitAnnounce/RecruitAnno
 import LandingPage from "./LandingPage";
 import Header from "components/Layout/Header";
 import Login from "components/Layout/Login/Login";
-import Profile from "components/Layout/Porfile/Profile";
+import Profile from "components/Layout/Profile";
 import {RequireToken} from "./Auth";
 
 export default function Router() {
