@@ -1,12 +1,12 @@
-import react, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {useParams} from 'react-router-dom';
 import axios from 'axios';
 import CommentList from './CommentList';
-import { API_ORIGIN } from 'components/APIRequest/APIRequest';
+import {API_ORIGIN} from 'components/APIRequest/APIRequest';
 
 export default function Comment({comments}) {
     const [commentContent, setCommentContent] = useState("");
-    
+
     const handleChangeComment = (e) => {
         setCommentContent(e.target.value);
         console.log("comment changed", commentContent);
@@ -29,31 +29,32 @@ export default function Comment({comments}) {
         }
     };
 
-    return (<> < div className = 'flex flex-col w-full self-center items-center my-10' > <div
-        className='flex flex-row gap-3 w-screen bg-gray-300 justify-center h-20 py-2'>
-        {/* 프로필 */}
-        <div className='flex flex-row gap-3 self-center align-middle'>
-            {/* 프로필 사진 DB에 이미지를 BASE64로 넣어벎 */}
-            <img className="h-16 w-16 rounded-full bg-white" alt="프로필 사진" src={""}/>
-            <p
-                className='flex self-center align-middle whitespace-nowrap overflow-hidden \ text-ellipsis '>닉네임</p>
-        </div>
-        {/* 댓글 입력 */}
-        <div className='align-middle self-center h-[90%] w-[30%]'>
-            <input
-                onChange={handleChangeComment}
-                type='text'
-                className='border border-[#EEEEEE] bg-white \
+    return (
+        <> < div className = 'flex flex-col w-full self-center items-center my-10' > <div
+            className='flex flex-row gap-3 w-screen bg-gray-300 justify-center h-20 py-2'>
+            {/* 프로필 */}
+            <div className='flex flex-row gap-3 self-center align-middle'>
+                {/* 프로필 사진 DB에 이미지를 BASE64로 넣어벎 */}
+                <img className="h-16 w-16 rounded-full bg-white" alt="프로필 사진" src={""}/>
+                <p
+                    className='flex self-center align-middle whitespace-nowrap overflow-hidden \ text-ellipsis '>닉네임</p>
+            </div>
+            {/* 댓글 입력 */}
+            <div className='align-middle self-center h-[90%] w-[30%]'>
+                <input
+                    onChange={handleChangeComment}
+                    type='text'
+                    className='border border-[#EEEEEE] bg-white \
                     h-full w-full px-4'></input>
-        </div>
-        <button
-            type='button'
-            className='border border-[#EEEEEE] bg-white \
+            </div>
+            <button
+                type='button'
+                className='border border-[#EEEEEE] bg-white \
                 h-[90%] self-center px-6'
-            onClick={fetchPostComments}>제출</button>
+                onClick={fetchPostComments}>제출</button>
         </div>
     </div>
-    <CommentList comments={comments} />
-    </>
+    <CommentList comments={comments}/>
+</>
     )
 }

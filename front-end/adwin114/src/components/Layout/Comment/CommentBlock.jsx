@@ -16,7 +16,7 @@ export default function CommentBlock({comment}) {
             const user_id = "63033dc1f7c78b7416dce005"
             try {
                 const API_URI = `${API_ORIGIN}/likes`
-                const response = await axios.put(API_URI, {
+                await axios.put(API_URI, {
                     "target_id": comment._id,
                     "user_id": user_id
                 });

@@ -19,7 +19,7 @@ const login = () => {
     } else {
       // make api call to our backend. we'll leave thisfor later
       axios
-        .post(`${API_ORIGIN}/login`, {
+        .post(`${API_ORIGIN}/auth/login`, {
           username: username,
           password: password,
         })
@@ -57,10 +57,10 @@ const login = () => {
                         required /><button
                             className='border border-[#D9D9D9] bg-[#D9D9D9] rounded-full px-20 py-2 \
                 text-white hover:border-[#FF8C32] hover:bg-[#FF8C32] transition-color ease-in-out duration-300'
-                            onClick={login}>LOGIN</button><div className='flex flex-row gap-6'>
-                        <Link to="/login" className="text-[#06113C]">비밀번호 찾기</Link>
-                        <Link to="/login" className="text-[#06113C]">아이디 찾기</Link>
-                        <Link to="/login" className="text-[#06113C]">회원가입</Link>
+                            onClick={login}>로그인</button><div className='flex flex-row gap-6'>
+                        <Link to="/fpass" className="text-[#06113C]">비밀번호 찾기</Link>
+                        <Link to="/fid" className="text-[#06113C]">아이디 찾기</Link>
+                        <Link to="/register" className="text-[#06113C]">회원가입</Link>
                     </div></>
                     )}
         </div>

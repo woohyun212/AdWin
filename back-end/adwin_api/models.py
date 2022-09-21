@@ -37,8 +37,9 @@ class UserModelBase(BaseModel):
     """중복되는 내용을 Base로 두고 In Out에서 필요한 자료만 추가한다."""
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     username: str
+    nickname: str
     email: EmailStr
-    profile_image: str
+    profile_image: Optional[str]
 
     class Config:
         allow_population_by_field_name = True
@@ -49,21 +50,24 @@ class UserModelBase(BaseModel):
                 "username": "string",
                 "password": "string",
                 "email": "user@example.com",
-                "profile_image": "string"
+                "profile_image": "base64 image"
             }
         }
 
 
 class UserModelIn(UserModelBase):
     password: str
+    password_check: str
 
     # 추후에 저장할 때는 암호화하여 저장
     class Config:
         schema_extra = {
             "example": {
+                "nickname": "string",
                 "username": "string",
-                "password": "string",
                 "email": "user@example.com",
+                "password": "string",
+                "password_check": "string",
                 "profile_image": "string"
             }
         }

@@ -12,6 +12,7 @@ import Header from "components/Layout/Header";
 import Login from "components/Layout/Login/Login";
 import Profile from "components/Layout/Profile";
 import {RequireToken} from "./Auth";
+import Register from "components/Layout/Register";
 
 export default function Router() {
     return (
@@ -26,9 +27,9 @@ export default function Router() {
                 <Route path="/community" element={<Community />}/>
                 <Route path="/recruit-announce/:post_id" element={<RecruitAnnounceDetail/>}/>
                 <Route path="/recruit-announce/:post_id/update" element={<RecruitAnnounceUpdate/>}/>
+                <Route path="register" element={<Register/>}/>
                 <Route path="/login" element={<Login/>}/>
-                <Route path="/profile" element={<RequireToken ><Profile/></RequireToken>}
-                />
+                <Route path="/profile" element={<RequireToken ><Profile/></RequireToken>}/>
             </Routes>
         </BrowserRouter>
     );

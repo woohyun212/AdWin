@@ -16,11 +16,16 @@ router = APIRouter(prefix='/users',
 # User 관련 Endpoints
 @router.post("", response_description="Add new user", response_model=UserModelIn)
 async def create_user(user_data: UserModelIn = Body()):
-    user_data = jsonable_encoder(user_data)
+    user_data: dict = jsonable_encoder(user_data)
     user_data["created_at"] = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    user_data.pop("password_check")
     new_user = await db.user_collection.insert_one(user_data)
-    created_user = await db.user_collection.find_one({"_id": new_user.inserted_id}, projection={"password": False})
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_user)
+    created_user = await db.user_collection.find_one({"_id": new_user.inserted_id},
+                                                     projection={"password": False,
+                                                                 "username": False,
+                                                                 "created_at": False,
+                                                                 "email": False})
+    return created_user
 
 
 @router.get("/{user_id}", response_description="Get a user by id", response_model=UserModelOut)

@@ -69,7 +69,7 @@ export default function Navbar({fixed}) {
                     <Item title="로그인" to="/login" addClass="px-3 py-2"/>
                     <Item
                         title="회원가입"
-                        to="/"
+                        to="/register"
                         addClass={`border rounded-lg px-3 py-2 border-${Color}`}/>
                 </div>
             </div>
