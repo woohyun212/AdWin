@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 import database as db
 import models
 from routers import users, posts, comments, likes, auth
-import authentication
 import utils
 from config import *
 
@@ -28,7 +27,6 @@ app.include_router(posts.router)
 app.include_router(comments.router)
 app.include_router(likes.router)
 app.include_router(auth.router)
-# app.include_router(authentication.router)
 
 
 @app.get("/all_users", response_description="List all users",
@@ -53,9 +51,3 @@ async def get_all_posts(post_type: models.PostType | None = None):
     return _posts
 
 
-@app.exception_handler(AuthJWTException)
-def authjwt_exception_handler(request: Request, exc: AuthJWTException):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"detail": exc.message}
-    )

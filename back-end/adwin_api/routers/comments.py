@@ -9,7 +9,7 @@ from routers.auth import get_current_active_user, read_users_me
 from routers.likes import delete_like, get_likes_data
 from routers.users import get_user_by_id
 from utils import *
-
+from routers.auth import *
 router = APIRouter(prefix='',
                    tags=['Comments'],
                    responses={404: {"description": "Not found"}}, )
@@ -33,10 +33,9 @@ async def create_comment(post_id: str, comment_data: CommentModelIn = Body(...))
 
 
 @router.get("/{post_id}/comments", response_description="List all comments in post")
-async def get_comments_in_post(post_id: str,
-                               current_user: get_current_active_user = Depends()):
-    user_id = current_user["_id"]
+async def get_comments_in_post(post_id: str, user_id: str):
     """
+    :param user_id: 
     :type post_id: str
     :param post_id: ID of the post
     """
@@ -45,13 +44,13 @@ async def get_comments_in_post(post_id: str,
     for comment in comments:
         if comment is not None:
             author_data = await get_user_by_id(comment["user_id"])
-            comment["username"] = author_data["username"]
+            comment["nickname"] = author_data["nickname"]
             comment["profile_image"] = author_data["profile_image"]
             likes_data = await get_likes_data(comment["_id"])
             comment["likes"] = likes_data["count"]
             comment["is_liked"] = user_id in likes_data["ids_clicked_like"]
-    comments.reverse()
-    pprint(comments)
+    comments.reverse()  # 댓글 최신순 정렬
+    # pprint(comments)
     return comments
 
 

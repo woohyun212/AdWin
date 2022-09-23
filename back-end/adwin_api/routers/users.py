@@ -6,10 +6,33 @@ from fastapi.responses import JSONResponse
 import database as db
 from models import UserModelIn, UserModelOut, UpdateUserModel
 from utils import *
+import routers.auth as auth
 
 router = APIRouter(prefix='/users',
                    tags=['Users'],
                    responses={404: {"description": "Not found"}}, )
+
+
+@router.post("/register")
+async def user_register(register_data: UserModelIn = Body(...)):
+    register_data = jsonable_encoder(register_data)
+    if await db.user_collection.find_one({"email": register_data["email"]}) is not None:
+        raise HTTPException(status_code=400, detail=f"이미 가입된 이메일이 존재합니다.")
+    elif await db.user_collection.find_one({"username": register_data["username"]}) is not None:
+        raise HTTPException(status_code=400, detail=f"동일한 아이디가 존재합니다.")
+    elif register_data["password"] != register_data["password_check"]:
+        raise HTTPException(status_code=400, detail=f"passwords are not correct!")
+    else:
+        created_user = await create_user(register_data)
+        access_token_expires = datetime.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+        profile_image = created_user.pop("profile_image")
+        access_token = auth.create_access_token(
+            data=created_user, expires_delta=access_token_expires
+        )
+        return JSONResponse(status_code=status.HTTP_201_CREATED,
+                            content={"profile_image": profile_image,
+                                     "access_token": access_token,
+                                     "token_type": "bearer"})
 
 
 # User 관련 Endpoints

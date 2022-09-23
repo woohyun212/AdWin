@@ -247,3 +247,35 @@ class LikesInitModel(BaseModel):
                 "target_id": "string"
             }
         }
+
+
+class LoginModel(BaseModel):
+    username: str
+    password: str
+
+
+class RegisterItem(BaseModel):
+    nickname: str
+    username: str
+    email: EmailStr
+    password: str
+    password_check: str
+    profile_image: Optional[str]
+
+
+class TokenModel(BaseModel):
+    access_token: str
+
+
+class TokenAndProfileImage(BaseModel):
+    access_token: str
+    token_type: str
+    profile_image: Optional[str]
+
+
+class TokenData(BaseModel):
+    username: str | None = None
+
+
+class UserInDB(UserModelBase):
+    hashed_password: str

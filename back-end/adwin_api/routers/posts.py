@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import APIRouter, Body, HTTPException, status, Depends, Header
 from fastapi.encoders import jsonable_encoder
 
@@ -7,7 +5,7 @@ from fastapi.responses import JSONResponse
 
 import database as db
 from models import PostModelIn, UpdatePostModel, PostType, RecruitType
-from routers.auth import get_current_active_user
+import routers.auth as auth
 from routers.comments import get_comments_in_post, delete_comment_in_post
 from routers.likes import delete_like, get_likes_data
 from routers.users import get_user_by_id
@@ -21,7 +19,7 @@ router = APIRouter(prefix='/posts',
 # Post 관련 Endpoints
 @router.post("", response_description="Add new post", response_model=PostModelIn)
 async def create_post(post_type: PostType, post_data: PostModelIn = Body(...),
-                      current_user: get_current_active_user = Depends()):
+                      current_user: auth.get_current_user = Depends()):
     """ Post 글 생성합니다."""
     post_data = jsonable_encoder(post_data)
     if post_type == PostType.CounselorRecruit and post_data["recruit_type"] is None:
@@ -54,19 +52,19 @@ async def get_posts_count(post_type: PostType):
 
 
 @router.get("/{post_id}", response_description="Get a post")
-async def get_post_detail(post_id: str):
-    # print(Authorization)
-    current_user = None
-    user_id = current_user["_id"] if current_user is not None else ''
+async def get_post_detail(post_id: str,
+                          Authorization: str | None = Header(default=None)):
+    token = Authorization[7:]
+    current_user_id = (await auth.get_current_user(token))["_id"] if token != 'null' else ''
+
     # TODO : 요청 header 든 이용해서 user_id 가져오기
     if (post_detail := await db.post_collection.find_one({"_id": post_id})) is not None:
         post_detail = await drop_none(post_detail)
-        post_detail["user_name"] = (await get_user_by_id(post_detail["user_id"]))["username"]
-        post_detail["comments"] = await get_comments_in_post(post_id, current_user=current_user)
+        post_detail["nickname"] = (await get_user_by_id(post_detail["user_id"]))["nickname"]
+        post_detail["comments"] = await get_comments_in_post(post_id, user_id=current_user_id)
         likes_data = await get_likes_data(post_id)
-        # pprint(likes_data)
         post_detail["likes"] = likes_data["count"]
-        post_detail["is_liked"] = user_id in likes_data["ids_clicked_like"]
+        post_detail["is_liked"] = current_user_id in likes_data["ids_clicked_like"]
         await db.post_collection.update_one({"_id": post_id}, {"$set": {"views": post_detail["views"] + 1}})
         return post_detail
     raise HTTPException(status_code=404, detail=f"Post {post_id} is not found")
@@ -78,7 +76,7 @@ async def get_8_posts(post_type: PostType, page_number: int = 1):
                                                        skip=(page_number - 1) * 8,
                                                        projection={"content": False}) \
         .sort("created_at", -1).to_list(length=8)
-    # post_type 필터링하고  page 만큼 스킵한다음에 정렬한다.? -> 어떻게든 됨..
+    # post_type 필터링하고 page 만큼 skip, 다음에 정렬.? -> 어떻게든 됨..
     for _post in _posts:
         _post["username"] = (await get_user_by_id(_post["user_id"]))["username"]
         _post["likes"] = (await get_likes_data(_post["_id"]))["count"]
