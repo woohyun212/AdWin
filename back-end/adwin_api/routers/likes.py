@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 
-from starlette import status
+
 from fastapi.responses import JSONResponse
 
 import database as db
-from authentication import is_valid
 from models import LikesModelIn, LikesInitModel
 from utils import *
 
@@ -15,7 +14,7 @@ router = APIRouter(prefix='/likes',
 
 
 @router.post("", response_description="Initialize a new like")
-async def initialize_likes(init_data: LikesInitModel = Body(...)):
+async def initialize_likes(init_data: LikesInitModel):
     init_data = jsonable_encoder(init_data)
     init_data["ids_clicked_like"] = []
     init_data["count"] = 0
@@ -33,7 +32,7 @@ async def likes_to_target(likes_data: LikesModelIn = Body(...)):
     :return: count of likes in Integer
     """
     likes_data = jsonable_encoder(likes_data)
-    if is_valid(likes_data["user_id"]):
+    if True:  # TODO: Add is_valid
         like_doc = await db.like_collection.find_one({"target_id": likes_data["target_id"]})
         if like_doc is not None:
             if likes_data["user_id"] not in like_doc["ids_clicked_like"]:

@@ -5,6 +5,8 @@ import {ReactComponent as SpeechBubble } from 'images/speech-bubble-svgrepo-com.
 import { Link } from 'react-router-dom';
 import Comment from 'components/Layout/Comment';
 import { API_ORIGIN } from 'components/APIRequest/APIRequest';
+import { fetchToken, fetchUserData } from 'Auth';
+
 
 const RECRUIT_TYPE_DATA = [
     { id: "SalesPerson", value: '직원' },
@@ -17,6 +19,7 @@ const RECRUIT_TYPE_DATA = [
 export default function RecruitAnnounceDetail() {
     let { post_id } = useParams();
     let navigate = useNavigate();
+    const userData = fetchUserData();
 
     const [Likes, setLikes] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
@@ -29,7 +32,10 @@ export default function RecruitAnnounceDetail() {
             setPostDetail({});
             setLoading(true);
             const API_URI = `${API_ORIGIN}/posts/${post_id}`
-            const response = await axios.get(API_URI);
+            const response = await axios.get(API_URI,
+                {headers: {
+                Authorization: `Bearer ${fetchToken()}`
+            }});
             response.data.recruit_type = RECRUIT_TYPE_DATA.filter(el => el.id === response.data.recruit_type)[0].value;
 
             setPostDetail(response.data);
@@ -47,13 +53,19 @@ export default function RecruitAnnounceDetail() {
             return;
         }
         const fetctLike = async () => {
-            const user_id = "63033dc1f7c78b7416dce005"
+            if (!userData) {
+                alert("로그인 후 이용하여 주시기바랍니다.");
+                navigate('/')
+                return;
+            }
             try {
                 const API_URI = `${API_ORIGIN}/likes`
                 const response = await axios.put(API_URI, {
                     "target_id": post_id,
-                    "user_id": user_id
-                  }
+                    "user_id": userData?._id
+                  },{headers: {
+                    Authorization: `Bearer ${fetchToken()}`
+                }}
                 );
             } catch (e) {
                 console.log(e)
@@ -71,10 +83,12 @@ export default function RecruitAnnounceDetail() {
 
     const deletePost = async () => {
         const fetctDeletePost = async () => {
-            const user_id = "63033dc1f7c78b7416dce005"
             try {
                 const API_URI = `${API_ORIGIN}/posts/${post_id}`
-                const response = await axios.delete(API_URI);
+                const response = await axios.delete(API_URI,
+                    {headers: {
+                    Authorization: `Bearer ${fetchToken()}`
+                }});
             } catch (e) {
                 console.log(e)
             }
@@ -87,6 +101,7 @@ export default function RecruitAnnounceDetail() {
 
     return(
         <div  className="flex flex-col bg-[#FFFFFF] pt-[0vh] w-screen h-screen overflow-scroll">
+    
             <div className="flex w-full sm:w-[75%] lg:w-[55%] mt-[14vh] mx-auto h-auto \  
             justify-center content-center border-t-black border-t ">
                 {/* 글 내용 들어가는 곳 */}

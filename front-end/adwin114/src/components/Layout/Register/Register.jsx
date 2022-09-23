@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {fetchToken, setToken} from "Auth";
+import {fetchToken, setProfileImage, setToken} from "Auth";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {API_ORIGIN} from 'components/APIRequest/APIRequest';
@@ -84,7 +84,7 @@ export default function Register() {
     const [nicknameValid, setNicknameValid] = useState([false, "* 필수 입력 항목입니다."]);
     const handleNicknameChange = (e) => {
         let nickname_copy = e.target.value;
-        nickname_copy = nickname_copy.replace(/[^a-zA-Z\d가-힣_.]/gi, "");
+        nickname_copy = nickname_copy.replace(/[^a-zA-Z\dㄱ-ㅎ가-힣_.]/gi, "");
         setNickname(nickname_copy);
         if (nickname_copy) {
             if (nickname_copy.length < 2) {
@@ -173,11 +173,12 @@ export default function Register() {
                     )
                 })
                 .then(function (response) {
-                    console.log(response, "response");
-                    console.log(response.data.token, "response.data.token");
-                    if (response.data.token) {
-                        setToken(response.data.token);
-                        navigate("/profile");
+                    console.log(response.data, "response.data");
+                    // console.log(response.data.access_token, "response.data.access_token");
+                    if (response.data.access_token) {
+                        setToken(response.data.access_token);
+                        setProfileImage(response.data.profile_image);
+                        navigate("/");
                     }
                 })
                 .catch(function (error) {
@@ -185,7 +186,7 @@ export default function Register() {
                 });
                 return;
         }
-        console.log(usernameVaild[0],emailValid[0],nicknameValid[0],passwordValid[0],passwordCheckValid[0])
+        // console.log(usernameVaild[0],emailValid[0],nicknameValid[0],passwordValid[0],passwordCheckValid[0])
         alert("입력 항목들을 다시 확인해주세요");
     };
 

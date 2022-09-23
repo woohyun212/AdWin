@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import { fetchToken, setToken } from "Auth";
+import { fetchToken, setProfileImage, setToken } from "Auth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_ORIGIN } from 'components/APIRequest/APIRequest';
 import {ReactComponent as AdWinLogo} from 'assets/WINAD.svg';
 import {Link} from 'react-router-dom';
-
+const qs = require('qs');
 
 export default function Login() {
     const navigate = useNavigate();
@@ -18,16 +18,28 @@ const login = () => {
       return;
     } else {
       // make api call to our backend. we'll leave thisfor later
-      axios
-        .post(`${API_ORIGIN}/auth/login`, {
-          username: username,
-          password: password,
-        })
+      
+      const data = {
+        username: username,
+        password: password
+      };
+      const config = {
+          method: 'post',
+          url: `${API_ORIGIN}/auth/token`,
+          headers: { 
+            "Content-Type": 'application/x-www-form-urlencoded', 
+            'accept': 'application/json'
+          },
+          data: qs.stringify(data),
+        };
+        axios(config)
         .then(function (response) {
-          console.log(response.data.token, "response.data.token");
-          if (response.data.token) {
-            setToken(response.data.token);
-            navigate("/profile");
+          console.log(response.data, "response.data");
+          console.log(response);
+          if (response.data.access_token) {
+            setToken(response.data.access_token);
+            setProfileImage(response.data.profile_image);
+            navigate("/");
           }
         })
         .catch(function (error) {

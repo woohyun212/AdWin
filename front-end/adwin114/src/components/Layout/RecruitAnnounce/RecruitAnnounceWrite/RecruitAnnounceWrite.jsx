@@ -4,6 +4,7 @@ import ClassicEditor from 'ckeditor5/build/ckeditor';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_ORIGIN } from "components/APIRequest/APIRequest";
+import { fetchToken,  fetchUserData } from 'Auth';
 
 const AREA_DATA = [
     { id: null, value: '지역을 선택해주세요' },
@@ -77,10 +78,9 @@ export default function RecruitAnnounceWrite() {
     const [response, setResponse] = useState("");
     const [error, setError] = useState(null);
     const handleSummbitButton = (e) =>{
-        
         if (window.confirm("제출 하시겠습니까?")) {
             let copy_postContents = postContents;
-            copy_postContents.user_id = "63033dc1f7c78b7416dce005";
+            copy_postContents.user_id = fetchUserData()._id;
             copy_postContents.area = selectedAreaValue;
             copy_postContents.recruit_type = selectedRecruitTypeValue;
             setPostContents(copy_postContents);
@@ -99,12 +99,14 @@ export default function RecruitAnnounceWrite() {
                 try {
                     setError(null);
                     const API_URI = `${API_ORIGIN}/posts?post_type=CounselorRecruit`
-                    setResponse(await axios.post(API_URI, postContents))
+                    setResponse(await axios.post(API_URI, postContents,
+                        {headers: {
+                        Authorization: `Bearer ${fetchToken()}`
+                    }}))
                     console.log(response);
                 } catch (e) {
                     setError(e);
                     alert(e.response.data.detail[0].msg);
-
                 }
 
             };
@@ -114,6 +116,12 @@ export default function RecruitAnnounceWrite() {
     };
 
 
+    if (!fetchToken()) {
+        alert("로그인 후 이용하여 주시기 바랍니다.");
+        if (window.confirm("로그인 하시겠습니까?")) {
+            navigate('/login');
+        }
+    }
 
     return (
 <> 

@@ -2,56 +2,57 @@
 각종 인증 JWT, OAuth2, Cookies, Sections 에 대한 인증을 처리
 """
 import database as db
+from config import SECRET_KEY
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi_jwt_auth import AuthJWT
+from pydantic import BaseModel
+
+router = APIRouter(prefix='/authentication')
 
 
-async def is_user_exist(_id: str):
+class User(BaseModel):
+    username: str
+    password: str
+
+
+class Settings(BaseModel):
+    authjwt_secret_key: str = SECRET_KEY
+
+
+@AuthJWT.load_config
+def get_config():
+    return Settings()
+
+
+@router.post('/login')
+def login(user: User, Authorize: AuthJWT = Depends()):
+    if user.username != "test" or user.password != "test":
+        raise HTTPException(status_code=401, detail="Bad username or password")
+
+    # Use create_access_token() and create_refresh_token() to create our
+    # access and refresh tokens
+    access_token = Authorize.create_access_token(subject=user.username)
+    refresh_token = Authorize.create_refresh_token(subject=user.username)
+    return {"access_token": access_token, "refresh_token": refresh_token}
+
+
+@router.post('/refresh')
+def refresh(Authorize: AuthJWT = Depends()):
     """
-    Check if _id is valid
-    :param _id: ObjectId with string
-    :return: boolean
+    The jwt_refresh_token_required() function insures a valid refresh
+    token is present in the request before running any code below that function.
+    we can use the get_jwt_subject() function to get the subject of the refresh
+    token, and use the create_access_token() function again to make a new access token
     """
-    import database as db
-    if await db.user_collection.find_one({"_id": _id}):
-        return True
-    return False
+    Authorize.jwt_refresh_token_required()
+
+    current_user = Authorize.get_jwt_subject()
+    new_access_token = Authorize.create_access_token(subject=current_user)
+    return {"access_token": new_access_token}
 
 
-async def is_post_exist(_id: str):
-    """
-    Check if _id is valid
-    :param _id: ObjectId with string
-    :return: boolean
-    """
-    import database as db
-    if await db.post_collection.find_one({"_id": _id}):
-        return True
-    return False
-
-
-async def is_comment_exist(_id: str):
-    """
-    Check if _id is valid
-    :param _id: ObjectId with string
-    :return: boolean
-    """
-    import database as db
-    if await db.comment_collection.find_one({"_id": _id}):
-        return True
-    return False
-
-
-async def is_exist(_id: str):
-    """
-    Check _id is existed
-    :param _id: ObjectId with string
-    :return: boolean
-    """
-    if await is_user_exist(_id) or await is_post_exist(_id) or await is_comment_exist(_id):
-        return True
-    return False
-
-
-def is_valid(user_id: str):
-    if (db.user_collection.find_one({"_id": user_id})) is not None:
-        return True
-    return False
+@router.get('/protected')
+def protected(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+    current_user = Authorize.get_jwt_subject()
+    return {"user": current_user}

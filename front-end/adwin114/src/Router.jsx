@@ -13,6 +13,8 @@ import Login from "components/Layout/Login/Login";
 import Profile from "components/Layout/Profile";
 import {RequireToken} from "./Auth";
 import Register from "components/Layout/Register";
+import Logout from "components/Layout/Logout";
+
 
 export default function Router() {
     return (
@@ -30,6 +32,7 @@ export default function Router() {
                 <Route path="register" element={<Register/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/profile" element={<RequireToken ><Profile/></RequireToken>}/>
+                <Route path="/logout" element={<Logout/>}/>
             </Routes>
         </BrowserRouter>
     );

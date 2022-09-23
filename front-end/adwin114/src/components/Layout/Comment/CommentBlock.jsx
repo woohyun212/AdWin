@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import axios from "axios";
 import { API_ORIGIN } from "components/APIRequest/APIRequest";
+import { fetchProfileImage, fetchToken, fetchUserData } from "Auth";
+import {ReactComponent as PersonSVG} from 'images/person-svgrepo-com.svg';
 
 export default function CommentBlock({comment}) {
     console.log(comment)
@@ -13,13 +15,14 @@ export default function CommentBlock({comment}) {
             return;
         }
         const fetctLike = async () => {
-            const user_id = "63033dc1f7c78b7416dce005"
             try {
                 const API_URI = `${API_ORIGIN}/likes`
                 await axios.put(API_URI, {
                     "target_id": comment._id,
-                    "user_id": user_id
-                });
+                    "user_id": fetchUserData()._id
+                },{headers: {
+                    Authorization: `Bearer ${fetchToken()}`
+                }});
             } catch (e) {
                 console.log(e)
             }
@@ -34,12 +37,15 @@ export default function CommentBlock({comment}) {
         <div className="">
             {/* <div className="flex flex-col w-1/2 items-center mx-auto"> */}
             <div className="flex flex-row h-[8vh] gap-3 self-center mt-2">
-                <img
-                    className="h-16 aspect-square rounded-full bg-gray-400 self-center"
+                {console.log(comment.profile_image === null)}
+                {comment.profile_image === null
+                    ? <PersonSVG className="h-16 w-16 aspect-square rounded-full bg-white self-center border border-black"/>
+                    : <img
+                    className="h-16 aspect-square rounded-full bg-white self-center border border-black"
                     alt="프로필 사진"
-                    src={""}/>
+                    src={comment.profile_image}/>}
                 <p className="text-center self-center">
-                    {comment.user_name}
+                    {comment.username}
                 </p>
                 <p className="text-left self-center w-[30vw]">
                     {comment.content}

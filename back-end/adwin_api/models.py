@@ -40,6 +40,7 @@ class UserModelBase(BaseModel):
     nickname: str
     email: EmailStr
     profile_image: Optional[str]
+    disabled: bool = False
 
     class Config:
         allow_population_by_field_name = True
@@ -48,7 +49,7 @@ class UserModelBase(BaseModel):
         schema_extra = {
             "example": {
                 "username": "string",
-                "password": "string",
+                "hashed_password": "string",
                 "email": "user@example.com",
                 "profile_image": "base64 image"
             }
@@ -61,6 +62,9 @@ class UserModelIn(UserModelBase):
 
     # 추후에 저장할 때는 암호화하여 저장
     class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
                 "nickname": "string",

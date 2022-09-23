@@ -1,25 +1,18 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi_jwt_auth.exceptions import AuthJWTException
+from fastapi.middleware.cors import CORSMiddleware
+
 import database as db
 import models
 from routers import users, posts, comments, likes, auth
+import authentication
 import utils
+from config import *
 
 app = FastAPI()
 
-allowed_origins = [
-    "http://localhost",
-    "http://localhost:3000",
-    "http://localhost:8000",
-    "http://192.168.0.2",
-    "http://192.168.0.*:3000",
-    "http://192.168.0.*:8000",
-    "http://182.227.119.180",
-    "http://182.227.119.180:8000",
-    "http://xn--sr3b80m.xn--hy1b562alhb.xn--h32bi4v.xn--3e0b707e"
-]
-
+allowed_origins = CLIENT_ORIGINS
 
 # CORSMiddleware
 app.add_middleware(
@@ -35,6 +28,8 @@ app.include_router(posts.router)
 app.include_router(comments.router)
 app.include_router(likes.router)
 app.include_router(auth.router)
+# app.include_router(authentication.router)
+
 
 @app.get("/all_users", response_description="List all users",
          response_model=models.List[models.UserModelOut], tags=['All'])
@@ -54,7 +49,13 @@ async def get_all_posts(post_type: models.PostType | None = None):
         if post_type is not None \
         else [await utils.drop_none(post) async for post in db.post_collection.find()]
     for _post in _posts:
-        _post["user_name"] = (await users.get_user(_post["user_id"]))["username"]
+        _post["user_name"] = (await users.get_user_by_id(_post["user_id"]))["username"]
     return _posts
 
 
+@app.exception_handler(AuthJWTException)
+def authjwt_exception_handler(request: Request, exc: AuthJWTException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.message}
+    )

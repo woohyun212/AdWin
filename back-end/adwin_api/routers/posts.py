@@ -1,14 +1,16 @@
-from fastapi import APIRouter, Body, HTTPException
+from typing import Optional
+
+from fastapi import APIRouter, Body, HTTPException, status, Depends, Header
 from fastapi.encoders import jsonable_encoder
-from starlette import status
+
 from fastapi.responses import JSONResponse
 
 import database as db
-from authentication import is_valid
 from models import PostModelIn, UpdatePostModel, PostType, RecruitType
+from routers.auth import get_current_active_user
 from routers.comments import get_comments_in_post, delete_comment_in_post
 from routers.likes import delete_like, get_likes_data
-from routers.users import get_user
+from routers.users import get_user_by_id
 from utils import *
 
 router = APIRouter(prefix='/posts',
@@ -18,13 +20,14 @@ router = APIRouter(prefix='/posts',
 
 # Post 관련 Endpoints
 @router.post("", response_description="Add new post", response_model=PostModelIn)
-async def create_post(post_type: PostType, post_data: PostModelIn = Body(...)):
+async def create_post(post_type: PostType, post_data: PostModelIn = Body(...),
+                      current_user: get_current_active_user = Depends()):
     """ Post 글 생성합니다."""
     post_data = jsonable_encoder(post_data)
-    user_id = post_data["user_id"]
     if post_type == PostType.CounselorRecruit and post_data["recruit_type"] is None:
         raise HTTPException(status_code=400, detail="required parameter `recruit_type` missing")
-    if is_valid(user_id):
+    post_data["user_id"] = current_user["_id"]
+    if current_user:
         if post_type != PostType.CounselorRecruit:
             post_data["recruit_type"] = None
             if post_type == PostType.RealEstateNews:
@@ -36,8 +39,8 @@ async def create_post(post_type: PostType, post_data: PostModelIn = Body(...)):
         new_post = await db.post_collection.insert_one(post_data)
         created_post = await db.post_collection.find_one({"_id": new_post.inserted_id})
         return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_post)
-    if user_id is None:
-        raise HTTPException(status_code=400, detail=f"Post {user_id} is not found")
+    if current_user is None:
+        raise HTTPException(status_code=400, detail=f"Post {post_data['user_id']} is not found")
     raise HTTPException(status_code=400, detail=f"What are you doing now?")
 
 
@@ -52,12 +55,14 @@ async def get_posts_count(post_type: PostType):
 
 @router.get("/{post_id}", response_description="Get a post")
 async def get_post_detail(post_id: str):
-    user_id = "63033dc1f7c78b7416dce005"
+    # print(Authorization)
+    current_user = None
+    user_id = current_user["_id"] if current_user is not None else ''
     # TODO : 요청 header 든 이용해서 user_id 가져오기
     if (post_detail := await db.post_collection.find_one({"_id": post_id})) is not None:
         post_detail = await drop_none(post_detail)
-        post_detail["user_name"] = (await get_user(post_detail["user_id"]))["username"]
-        post_detail["comments"] = await get_comments_in_post(post_id)
+        post_detail["user_name"] = (await get_user_by_id(post_detail["user_id"]))["username"]
+        post_detail["comments"] = await get_comments_in_post(post_id, current_user=current_user)
         likes_data = await get_likes_data(post_id)
         # pprint(likes_data)
         post_detail["likes"] = likes_data["count"]
@@ -75,7 +80,7 @@ async def get_8_posts(post_type: PostType, page_number: int = 1):
         .sort("created_at", -1).to_list(length=8)
     # post_type 필터링하고  page 만큼 스킵한다음에 정렬한다.? -> 어떻게든 됨..
     for _post in _posts:
-        _post["user_name"] = (await get_user(_post["user_id"]))["username"]
+        _post["username"] = (await get_user_by_id(_post["user_id"]))["username"]
         _post["likes"] = (await get_likes_data(_post["_id"]))["count"]
         _post = await drop_none(_post)
     docs_count = await db.post_collection.count_documents({"post_type": post_type})

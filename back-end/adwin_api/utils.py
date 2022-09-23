@@ -2,6 +2,7 @@ import datetime
 import encodings
 from pprint import pprint
 import math
+import bcrypt
 
 from routers.likes import initialize_likes
 from urllib.request import urlopen
@@ -42,3 +43,7 @@ async def initialize_data(data: dict, **kwargs) -> None:
     if kwargs:
         for k, v in kwargs.items():
             data[k] = v
+
+
+def hash_string(string: str):
+    return bcrypt.hashpw(string.encode('utf-8'), bcrypt.gensalt())

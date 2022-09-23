@@ -1,13 +1,13 @@
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
-from starlette import status
+
 from fastapi.responses import JSONResponse
 
 import database as db
-from authentication import is_valid
 from models import *
+from routers.auth import get_current_active_user, read_users_me
 from routers.likes import delete_like, get_likes_data
-from routers.users import get_user
+from routers.users import get_user_by_id
 from utils import *
 
 router = APIRouter(prefix='',
@@ -21,7 +21,7 @@ async def create_comment(post_id: str, comment_data: CommentModelIn = Body(...))
     """Create Comment"""
     comment_data = jsonable_encoder(comment_data)
     user = (await db.user_collection.find_one({"_id": comment_data["user_id"]}))
-    if is_valid(user["_id"]) and (user is not None):
+    if user is not None:  # TODO: Add is_valid
         if post := (await db.post_collection.find_one({"_id": post_id})) is not None:
             await initialize_data(comment_data, user_id=user["_id"], post_id=post_id)
             new_comment = await db.comment_collection.insert_one(comment_data)
@@ -32,10 +32,10 @@ async def create_comment(post_id: str, comment_data: CommentModelIn = Body(...))
     raise HTTPException(status_code=400, detail=f"What are you doing now?")
 
 
-@router.get("/{post_id}/comments", response_description="List all comments in post",
-            response_model=List[CommentModelOut])
-async def get_comments_in_post(post_id: str):
-    user_id = "63033dc1f7c78b7416dce005"
+@router.get("/{post_id}/comments", response_description="List all comments in post")
+async def get_comments_in_post(post_id: str,
+                               current_user: get_current_active_user = Depends()):
+    user_id = current_user["_id"]
     """
     :type post_id: str
     :param post_id: ID of the post
@@ -44,11 +44,14 @@ async def get_comments_in_post(post_id: str):
                 db.comment_collection.find({"post_id": post_id})]
     for comment in comments:
         if comment is not None:
-            comment["user_name"] = (await get_user(comment["user_id"]))["username"]
+            author_data = await get_user_by_id(comment["user_id"])
+            comment["username"] = author_data["username"]
+            comment["profile_image"] = author_data["profile_image"]
             likes_data = await get_likes_data(comment["_id"])
             comment["likes"] = likes_data["count"]
             comment["is_liked"] = user_id in likes_data["ids_clicked_like"]
     comments.reverse()
+    pprint(comments)
     return comments
 
 

@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from starlette import status
+
 from fastapi.responses import JSONResponse
 
 import database as db
-from authentication import is_valid
 from models import UserModelIn, UserModelOut, UpdateUserModel
 from utils import *
 
@@ -18,18 +17,17 @@ router = APIRouter(prefix='/users',
 async def create_user(user_data: UserModelIn = Body()):
     user_data: dict = jsonable_encoder(user_data)
     user_data["created_at"] = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    user_data.pop("password_check")
+    user_data["hashed_password"] = hash_string(user_data["password"])
+    for key in ["password_check", "password"]:
+        user_data.pop(key)
     new_user = await db.user_collection.insert_one(user_data)
     created_user = await db.user_collection.find_one({"_id": new_user.inserted_id},
-                                                     projection={"password": False,
-                                                                 "username": False,
-                                                                 "created_at": False,
-                                                                 "email": False})
+                                                     projection={"hashed_password": False})
     return created_user
 
 
 @router.get("/{user_id}", response_description="Get a user by id", response_model=UserModelOut)
-async def get_user(user_id: str):
+async def get_user_by_id(user_id: str):
     user = await db.user_collection.find_one({"_id": user_id})
     return user
 
@@ -47,13 +45,13 @@ async def update_user(user_id: str, update_data: UpdateUserModel = Body(...)):
     # 변경 점이 없으면
     if (existing_user := await db.user_collection.find_one({"_id": user_id})) is not None:
         return existing_user
-    raise HTTPException(status_code=404, detail=f"User {user_id} is not found")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User {user_id} is not found")
 
 
 @router.delete("/{user_id}", response_description="Delete a user")
 async def delete_user(user_id: str):
-    if is_valid(user_id) and await db.user_collection.find_one({"_id": user_id}) is not None:
+    if await db.user_collection.find_one({"_id": user_id}) is not None:
         await db.user_collection.delete_one({"_id": user_id})
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={"config": "User has been deleted successfully"})
-    raise HTTPException(status_code=404, detail=f"User {user_id} is not found")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User {user_id} is not found")

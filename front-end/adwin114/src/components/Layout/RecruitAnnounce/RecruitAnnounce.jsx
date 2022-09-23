@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Search from "./Search";
 import axios from "axios"
 import RecruitAnnounceList from "./RecruitAnnounceList";
 import Pagination from "./Pagination/Pagination";
  import { API_ORIGIN } from "components/APIRequest/APIRequest";
+import { fetchToken } from "Auth";
 
 export default function RecruitAnnounce() {
     const [posts, setposts] = useState([]);
@@ -12,7 +13,17 @@ export default function RecruitAnnounce() {
     const [error, setError] = useState(null);
     const [allPages, setAllPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
-
+    const navigate = useNavigate();
+    const onWriteButtonClick = () => {
+        if (fetchToken()){
+            navigate('write');
+        } else {
+            alert("로그인 후 이용하여 주시기 바랍니다.");
+            if (window.confirm("로그인 하시겠습니까?")) {
+                navigate('/login');
+            }
+        }
+    };
     const fetctPosts = async () => {
         try {
             setError(null);
@@ -53,7 +64,7 @@ export default function RecruitAnnounce() {
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}/>
                     <div className="w-1/3">
-                        <Link to="write" className="px-3 py-1 bg-[#FF8C32] float-right mr-11">글 작성</Link>
+                        <button onClick={onWriteButtonClick} className="px-3 py-1 bg-[#FF8C32] float-right mr-11">글 작성</button>
                     </div>
                 </div>
             </div>
