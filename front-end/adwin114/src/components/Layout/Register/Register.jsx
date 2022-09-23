@@ -160,7 +160,7 @@ export default function Register() {
             return;
         } else if (usernameVaild[0]&&emailValid[0]&&nicknameValid[0]&&passwordValid[0]&&passwordCheckValid[0]) {
             axios
-                .post(`${API_ORIGIN}/auth/register`, {
+                .post(`${API_ORIGIN}/users/register`, {
                     nickname: nickname,
                     username: username,
                     email: email,

@@ -13,7 +13,7 @@ export default function Comment({comments}) {
 
     const handleChangeComment = (e) => {
         setCommentContent(e.target.value);
-        console.log("comment changed", commentContent);
+        // console.log("comment changed", commentContent);
     };
 
     const {post_id} = useParams();
@@ -41,10 +41,10 @@ export default function Comment({comments}) {
             {/* 프로필 */}
             <div className='flex flex-row gap-3 self-center align-middle'>
                 {/* 프로필 사진 DB에 이미지를 BASE64로 넣어벎 */}
-                {fetchProfileImage() === "null" ? <PersonSVG className='h-16 w-16 rounded-full bg-white'/> 
+                {fetchProfileImage() === "null" || fetchProfileImage() === null ? <PersonSVG className='h-16 w-16 rounded-full bg-white'/> 
                 : <img className="h-16 aspect-square rounded-full bg-white" alt="프로필 사진" src={fetchProfileImage()}/>}
                 <p
-                    className='flex self-center align-middle whitespace-nowrap overflow-hidden \ text-ellipsis '>{userData.username}</p>
+                    className='flex self-center align-middle whitespace-nowrap overflow-hidden \ text-ellipsis '>{userData.nickname}</p>
             </div>
             {/* 댓글 입력 */}
             <div className='align-middle self-center h-[90%] w-[30%]'>

@@ -48,13 +48,13 @@ export default function RecruitAnnounceWrite() {
     const handleDropArea = (e) => {
         const {value} = e.target;
         setSelectedAreaValue(AREA_DATA.filter(el => el.value === value)[0].id);
-        console.log(selectedAreaValue)
+        // console.log(selectedAreaValue)
     };
 
     const handleDropRecruitType = (e) => {
         const {value} = e.target;
         setSelectedRecruitTypeValue(RECRUIT_TYPE_DATA.filter(el => el.value === value)[0].id)
-        console.log(selectedRecruitTypeValue)
+        // console.log(selectedRecritTypeValue)
     };
 
     const handleChangePostContent = (e) => {
@@ -67,7 +67,7 @@ export default function RecruitAnnounceWrite() {
             _postContents.content = e.getData();
             setPostContents(_postContents);
         }
-        console.log(postContents);
+        // console.log(postContents);
     };
 
     const handelCancleButton = (e) => {
@@ -75,9 +75,9 @@ export default function RecruitAnnounceWrite() {
             navigate('/recruit-announce');
           }
     };
-    const [response, setResponse] = useState("");
+    // const [response, setResponse] = useState("");
     const [error, setError] = useState(null);
-    const handleSummbitButton = (e) =>{
+    const handleSummbitButton = async (e) =>{
         if (window.confirm("제출 하시겠습니까?")) {
             let copy_postContents = postContents;
             copy_postContents.user_id = fetchUserData()._id;
@@ -94,24 +94,24 @@ export default function RecruitAnnounceWrite() {
                 alert("내용 입력해주세요.");
                 return null;
             }
-            
+
             const fetctPosts = async () => {
                 try {
                     setError(null);
                     const API_URI = `${API_ORIGIN}/posts?post_type=CounselorRecruit`
-                    setResponse(await axios.post(API_URI, postContents,
+                    let response = await axios.post(API_URI, postContents,
                         {headers: {
                         Authorization: `Bearer ${fetchToken()}`
-                    }}))
-                    console.log(response);
+                    }}).then(function(result) {
+                        console.log(result);
+                        navigate(`/recruit-announce/${result.data._id}`); 
+                      });
                 } catch (e) {
                     setError(e);
                     alert(e.response.data.detail[0].msg);
                 }
-
             };
             fetctPosts();
-            navigate('/recruit-announce'); 
           }
     };
 
@@ -168,7 +168,7 @@ export default function RecruitAnnounceWrite() {
                 data=""
                 onReady={editor => {
                     // You can store the "editor" and use when it is needed.
-                    console.log('Editor is ready to use!', editor);
+                    // console.log('Editor is ready to use!', editor);
                     editor.ui.view.editable.element.style.minHeight = "30vh";
                 }}
                 onChange={(event, editor) => {
@@ -177,11 +177,11 @@ export default function RecruitAnnounceWrite() {
                     handleChangePostContent(editor);
                 }}
                 onBlur={(event, editor) => {
-                    console.log('Blur.', editor);
+                    // console.log('Blur.', editor);
                     editor.ui.view.editable.element.style.maxHeight = "500px";
                 }}
                 onFocus={(event, editor) => {
-                    console.log('Focus.', editor);
+                    // console.log('Focus.', editor);
                     editor.ui.view.editable.element.style.minHeight = "30vh";
                     editor.ui.view.editable.element.style.maxHeight = "500px";
                 }}/>

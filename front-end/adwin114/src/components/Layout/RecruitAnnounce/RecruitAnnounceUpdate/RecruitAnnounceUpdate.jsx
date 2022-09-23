@@ -4,7 +4,7 @@ import ClassicEditor from 'ckeditor5/build/ckeditor';
 import { useNavigate, useParams } from 'react-router-dom';
 import { API_ORIGIN } from "components/APIRequest/APIRequest";
 import axios from 'axios';
-import { fetchToken } from 'Auth';
+import { fetchToken, fetchUserData } from 'Auth';
 
 const AREA_DATA = [
     { id: null, value: '지역을 선택해주세요' },
@@ -43,28 +43,51 @@ export default function RecruitAnnounceWrite() {
     );
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    
+
+    const fetctGetPost = async () => {
+        try {
+            setError(null);
+            const API_URI = `${API_ORIGIN}/posts/${post_id}`
+            const response = await axios.get(API_URI,
+                {headers: {
+                Authorization: `Bearer ${fetchToken()}`
+            }});
+            if (response.data?.user_id !== fetchUserData()?._id) {
+                console.log("비정상적인 접근입니다.");
+                navigate('/');
+                return;
+            }
+            response.data.recruit_type = RECRUIT_TYPE_DATA.filter(el => el.id === response.data.recruit_type)[0].value;
+            setTitle(response.data.title);
+            setContent(response.data.content);
+            setSelectedAreaValue(response.data.area);
+            setSelectedRecruitTypeValue((response.data.recruit_type));
+        } catch (e) {
+            setError(e);
+        }
+        
+    };
+
     const handleDropArea = (e) => {
         const {value} = e.target;
         setSelectedAreaValue(AREA_DATA.filter(el => el.value === value)[0].id);
-        console.log(selectedAreaValue)
+        // console.log(selectedAreaValue)
     };
 
     const handleDropRecruitType = (e) => {
-        console.log(e.target);
         const {value} = e.target;
         setSelectedRecruitTypeValue(value)
-        console.log(selectedRecruitTypeValue)
+        // console.log(selectedRecruitTypeValue)
     };
 
     const handleChangeContent = (e) => {
         setContent(e.getData());
-        console.log("content", content);
+        // console.log("content", content);
     };
 
     const handleChangeTitle = (e) => {
         setTitle(e.target.value);
-        console.log("title", title);
+        // console.log("title", title);
     };
 
     const handelCancleButton = (e) => {
@@ -83,7 +106,7 @@ export default function RecruitAnnounceWrite() {
                 recruit_type: changeRecruitTypeValueToId(selectedRecruitTypeValue),
                 user_id : "63033dc1f7c78b7416dce005"
               };
-            console.log(post);
+            // console.log(post);
             if (post.area === null || post.recruit_type === null){
                 alert("지역과 모집 유형을 선택해주세요.");
                 return null;
@@ -95,11 +118,11 @@ export default function RecruitAnnounceWrite() {
                 return null;
             }
             
-            const fetctPatchPost = async () => {
+            const fetctPatchPost = () => {
                 try {
                     setError(null);
                     const API_URI = `${API_ORIGIN}/posts/${post_id}`
-                    setResponse(await axios.patch(API_URI, post,{headers: {
+                    setResponse(axios.patch(API_URI, post,{headers: {
                         Authorization: `Bearer ${fetchToken()}`
                     }}))
                     // console.log(response);
@@ -114,30 +137,10 @@ export default function RecruitAnnounceWrite() {
           }
     };
 
-    const fetctGetPost = async () => {
-        try {
-            setError(null);
-            const API_URI = `${API_ORIGIN}/posts/${post_id}`
-            const response = await axios.get(API_URI,
-                {headers: {
-                Authorization: `Bearer ${fetchToken()}`
-            }});
-            response.data.recruit_type = RECRUIT_TYPE_DATA.filter(el => el.id === response.data.recruit_type)[0].value;
-            setTitle(response.data.title);
-            setContent(response.data.content);
-            setSelectedAreaValue(response.data.area);
-            setSelectedRecruitTypeValue((response.data.recruit_type));
-        } catch (e) {
-            setError(e);
-        }
-        
-    };
-
     useEffect(() => {
         fetctGetPost();
     // eslint-disable-next-line
     }, []);
-
 
     return (
 <> 

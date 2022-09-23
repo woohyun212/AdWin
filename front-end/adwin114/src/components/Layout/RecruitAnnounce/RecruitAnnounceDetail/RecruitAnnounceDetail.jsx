@@ -37,7 +37,6 @@ export default function RecruitAnnounceDetail() {
                 Authorization: `Bearer ${fetchToken()}`
             }});
             response.data.recruit_type = RECRUIT_TYPE_DATA.filter(el => el.id === response.data.recruit_type)[0].value;
-
             setPostDetail(response.data);
             setIsLiked(response.data.is_liked);
             setLikes(response.data.likes);
@@ -80,28 +79,53 @@ export default function RecruitAnnounceDetail() {
         fetctGetPosts();
     // eslint-disable-next-line
     }, [post_id]);
-
-    const deletePost = async () => {
-        const fetctDeletePost = async () => {
-            try {
-                const API_URI = `${API_ORIGIN}/posts/${post_id}`
-                const response = await axios.delete(API_URI,
-                    {headers: {
-                    Authorization: `Bearer ${fetchToken()}`
-                }});
-            } catch (e) {
-                console.log(e)
+    
+    const onUpdatePostClick = ()=>{
+        if (fetchToken()){
+            if (postDetail.user_id !== fetchUserData()?._id) {
+                alert("작성자만 수정할 수 있습니다.");
+                return;
             }
-        };
-        if (window.confirm("삭제 하시겠습니까?")) {
-            fetctDeletePost();
-            navigate("../recruit-announce")
+            navigate('update');
+        } else {
+            alert("로그인 후 이용하여 주시기 바랍니다.");
+            if (window.confirm("로그인 하시겠습니까?")) {
+                navigate('/login');
+            }
+        }
+    };
+
+    const OnDeletePostClick =  () => {
+        if (fetchToken()){
+            if (postDetail.user_id !== fetchUserData()?._id) {
+                alert("작성자만 삭제할 수 있습니다.");
+                return;
+            }
+            const fetctDeletePost =  () => {
+                try {
+                    const API_URI = `${API_ORIGIN}/posts/${post_id}`
+                    const response =  axios.delete(API_URI,
+                        {headers: {
+                        Authorization: `Bearer ${fetchToken()}`
+                    }});
+                } catch (e) {
+                    console.log(e)
+                }
+            };
+            if (window.confirm("삭제 하시겠습니까?")) {
+                fetctDeletePost();
+                navigate("../recruit-announce")
+            }
+        } else {
+            alert("로그인 후 이용하여 주시기 바랍니다.");
+            if (window.confirm("로그인 하시겠습니까?")) {
+                navigate('/login');
+            }
         }
     };
 
     return(
         <div  className="flex flex-col bg-[#FFFFFF] pt-[0vh] w-screen h-screen overflow-scroll">
-    
             <div className="flex w-full sm:w-[75%] lg:w-[55%] mt-[14vh] mx-auto h-auto \  
             justify-center content-center border-t-black border-t ">
                 {/* 글 내용 들어가는 곳 */}
@@ -116,15 +140,14 @@ export default function RecruitAnnounceDetail() {
                             >{postDetail.recruit_type}</p>
                         </span>
                         <h1 className='flex sm:w-[35%] lg:w-[65%] text-3xl self-center'>{postDetail.title}</h1>
-                        <Link to="update" className=' self-center align-middle'>
-                                <p className='whitespace-nowrap px-4 py-[0.75rem] h-12 bg-[#FF8C32] rounded-md'>글 수정</p>
-                        </Link>
-                        <button type='button' onClick={deletePost} className="h-12 px-3 whitespace-nowrap self-center \
+                        <button type='button' onClick={onUpdatePostClick} className=' self-center align-middle whitespace-nowrap px-4 py-[0.75rem] \
+                             h-12 bg-[#FF8C32] rounded-md'>글 수정</button>
+                        <button type='button' onClick={OnDeletePostClick} className="h-12 px-3 whitespace-nowrap self-center \
                              bg-[#EEEEEE] border border-[#CCCCCC] rounded-md align-middle float-right">글 삭제</button>  
                     </div>
                     <hr className=' border-black'/>
                     <div className='flex flex-row justify-between my-2 mx-auto w-full'>
-                        <span className="flex text-sm justify-center self-center w-[10%]">{postDetail.user_name}</span>
+                        <span className="flex text-sm justify-center whitespace-nowrap self-center w-[15%]">{postDetail.nickname}</span>
                         <span className='flex text-sm justify-center content-center  w-[10%]'>{postDetail.created_at}</span>                     
                     </div>
                     <hr className=' border-black'/>

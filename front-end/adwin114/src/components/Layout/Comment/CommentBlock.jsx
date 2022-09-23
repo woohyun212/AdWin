@@ -5,7 +5,7 @@ import { fetchProfileImage, fetchToken, fetchUserData } from "Auth";
 import {ReactComponent as PersonSVG} from 'images/person-svgrepo-com.svg';
 
 export default function CommentBlock({comment}) {
-    console.log(comment)
+    // console.log(comment)
     const [likes, setLikes] = useState(comment.likes);
     const [isLiked, setIsLiked] = useState(comment.is_liked);
 
@@ -34,10 +34,8 @@ export default function CommentBlock({comment}) {
 
 
     return (
-        <div className="">
-            {/* <div className="flex flex-col w-1/2 items-center mx-auto"> */}
+        <>
             <div className="flex flex-row h-[8vh] gap-3 self-center mt-2">
-                {console.log(comment.profile_image === null)}
                 {comment.profile_image === null
                     ? <PersonSVG className="h-16 w-16 aspect-square rounded-full bg-white self-center border border-black"/>
                     : <img
@@ -45,7 +43,7 @@ export default function CommentBlock({comment}) {
                     alt="프로필 사진"
                     src={comment.profile_image}/>}
                 <p className="text-center self-center">
-                    {comment.username}
+                    {comment.nickname}
                 </p>
                 <p className="text-left self-center w-[30vw]">
                     {comment.content}
@@ -72,8 +70,6 @@ export default function CommentBlock({comment}) {
                     {likes}
                 </p>
             </div>
-
-            {/* </div> */}
-        </div>
+        </>
     )
 }
