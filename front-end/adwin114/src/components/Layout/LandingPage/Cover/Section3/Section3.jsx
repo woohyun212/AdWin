@@ -6,13 +6,13 @@ import {Link} from "react-router-dom";
 export default function Section3() {
     return (
         <section
-            className="m-auto flex flex-col h-screen w-screen snap-start items-center justify-center bg-white text-[#06113C]">
+            className="m-auto flex flex-col h-screen w-screen items-center justify-center bg-white text-[#06113C]">
             <h1
-                className='flex font-SenRegular justify-center mx-auto mt-[18vh] mb-[6vh] text-2xl uppercase'>Community</h1>
+                className='flex font-SenRegular justify-center mx-auto mt-[3vh] mb-[1vh] md:mt-[18vh] md:mb-[6vh] text-2xl uppercase'>Community</h1>
             <div
-                className='grid grid-cols-2 gap-x-[2vw] gap-0 h-[55vh] w-[60vw] mx-auto mb-[17.4vh] leading-9 font-bold'>
+                className='flex flex-col md:flex-row gap-x-[2vw] gap-y-[7vh] h-[55vh] w-[80vw] mb:w-[60vw] mx-auto mb-[17.4vh] lg:w-[60vw] leading-9 font-bold'>
                 {/* 인기1개 최상위 3개 */}
-                <div className="자유게시판">
+                <div className="자유게시판 w-full md:w-[50%] h-[30vh]">
                     <div className='flex justify-between'>
                         <span className='ml-[1.1vw]'>자유 게시판</span>
                         <Link className=' text-2xl' to="frb">+</Link>
@@ -52,7 +52,7 @@ export default function Section3() {
                             Likes={0}/>
                     </div>
                 </div>
-                <div className="뉴스">
+                <div className="뉴스 w-full md:w-[50%] h-[30vh]">
                     <div className='flex justify-between'>
                         <span className='ml-[1.1vw]'>뉴스</span>
                         <Link className=' text-2xl' to="news">+</Link>

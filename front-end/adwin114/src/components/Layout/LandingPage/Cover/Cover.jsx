@@ -9,11 +9,11 @@ export default function Cover() {
     return (
         <main>
             <Section1/>
-            <Section2/>
+            {/* <Section2/> */}
             {/* <hr className='flex w-full border-[#BDBDBD] justify-center items-center mx-auto'/> */}
             <Section3/>
             {/* <hr className='flex w-full border-[#BDBDBD] justify-center items-center mx-auto'/> */}
-            <Section4/>
+            {/* <Section4/> */}
         </main>
     )
 }

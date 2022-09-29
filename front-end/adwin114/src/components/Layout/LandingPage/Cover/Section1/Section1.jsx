@@ -6,17 +6,17 @@ export default function Section1() {
     return (
         // 랜딩페이지 최상단. 메인화면.
         <section
-            className="m-auto flex flex-col h-screen w-screen snap-start items-center justify-center text-white space-y-16 ">
+            className="m-auto flex flex-col h-screen w-screen items-center justify-center text-white space-y-16 ">
             <Search/>
             <div className="static grid grid-cols-2 gap-4 text-[#06113C]">
                 <div
-                    className="flex flex-col relative bg-white w-[30vh] aspect-square text-black justify-center items-center">
+                    className="flex flex-col relative bg-white w-[45vw] h-[50vw] md:w-[30vw] md:h-auto md:aspect-square lg:w-[30vh] text-black justify-center items-center">
                     <p className="text-base">분양 상담사 모집</p>
                     <p className="text-xl ">지역별</p>
                     <div
-                        className="flex flex-col gap-3 absolute hover:bg-[#FF8C32] w-[30vh] aspect-square
+                        className="flex flex-col gap-3 absolute hover:bg-[#FF8C32] w-[45vw] h-[50vw] md:w-[30vw] md:h-auto md:aspect-square lg:w-[30vh]
                      text-transparent hover:text-white justify-center items-center transition-color ease-in-out duration-150">
-                        <p className="text-base">지역별</p>
+                        {/* <p className="text-base">지역별</p> */}
 
                         <div className="grid grid-cols-2 gap-2 gap-y-5 justify-center justify-items-center">
                             <Link
@@ -47,13 +47,13 @@ export default function Section1() {
                 </div>
 
                 <div
-                    className="flex flex-col relative bg-white w-[30vh] aspect-square text-black justify-center items-center">
+                    className="flex flex-col relative bg-white w-[45vw] h-[50vw] md:w-[30vw] md:h-auto md:aspect-square lg:w-[30vh] text-black justify-center items-center">
                     <p className="text-base">분양 상담사 모집</p>
                     <p className="text-xl">물건별</p>
                     <div
-                        className="flex flex-col gap-1 absolute hover:bg-[#FF8C32] w-[30vh] aspect-square
+                        className="flex flex-col gap-1 absolute hover:bg-[#FF8C32] w-[45vw] h-[50vw] md:w-[30vw] md:h-auto md:aspect-square lg:w-[30vh]
                      text-transparent hover:text-white justify-center items-center transition-color ease-in-out duration-150">
-                        <p className="text-base">물건별</p>
+                        {/* <p className="text-base">물건별</p> */}
 
                         <div className="grid grid-cols-1 gap-y-1 justify-center justify-items-center">
                             <Link

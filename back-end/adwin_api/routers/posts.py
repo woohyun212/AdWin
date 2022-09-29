@@ -56,7 +56,6 @@ async def get_post_detail(post_id: str,
                           Authorization: str | None = Header(default=None)):
     token = Authorization[7:]
     current_user_id = (await auth.get_current_user(token))["_id"] if token != 'null' else ''
-
     # TODO : 요청 header 든 이용해서 user_id 가져오기
     if (post_detail := await db.post_collection.find_one({"_id": post_id})) is not None:
         post_detail = await drop_none(post_detail)
@@ -78,7 +77,7 @@ async def get_8_posts(post_type: PostType, page_number: int = 1):
         .sort("created_at", -1).to_list(length=8)
     # post_type 필터링하고 page 만큼 skip, 다음에 정렬.? -> 어떻게든 됨..
     for _post in _posts:
-        _post["username"] = (await get_user_by_id(_post["user_id"]))["username"]
+        _post["nickname"] = (await get_user_by_id(_post["user_id"]))["nickname"]
         _post["likes"] = (await get_likes_data(_post["_id"]))["count"]
         _post = await drop_none(_post)
     docs_count = await db.post_collection.count_documents({"post_type": post_type})

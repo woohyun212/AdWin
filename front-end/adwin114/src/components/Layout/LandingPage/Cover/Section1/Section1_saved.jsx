@@ -9,7 +9,7 @@ export function Section1() {
     return (
         // 랜딩페이지 최상단. 메인화면.
         <section
-            className="m-auto flex flex-col h-screen w-screen snap-start items-center justify-center text-white space-y-16 ">
+            className="m-auto flex flex-col h-screen w-screen items-center justify-center text-white space-y-16 ">
             <Search/>
             <div className="grid grid-cols-2 gap-4 text-[#06113C] text-xl">
                 <Link to="promotion">

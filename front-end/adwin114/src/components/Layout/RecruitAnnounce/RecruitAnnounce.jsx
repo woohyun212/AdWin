@@ -5,9 +5,10 @@ import axios from "axios"
 import RecruitAnnounceList from "./RecruitAnnounceList";
 import Pagination from "./Pagination/Pagination";
  import { API_ORIGIN } from "components/APIRequest/APIRequest";
-import { fetchToken } from "Auth";
+import { CheckToken, fetchToken } from "Auth";
 
 export default function RecruitAnnounce() {
+    CheckToken();
     const [posts, setposts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -31,15 +32,15 @@ export default function RecruitAnnounce() {
             setLoading(true);
             const API_URI = `${API_ORIGIN}/posts?post_type=CounselorRecruit&page_number=${currentPage}`
             const response = await axios.get(API_URI);
-            console.log(response.data["posts"]);
+            // console.log(response.data["posts"]);
             setposts(response.data["posts"]);
             setAllPages(response.data["all_pages"])
-            console.log(response.data);
+            // console.log(response.data);
         } catch (e) {
             setError(e);
         }
         setLoading(false);
-        console.log(currentPage)
+        // console.log(currentPage)
     };
     useEffect(() => {
         fetctPosts();
@@ -49,12 +50,12 @@ export default function RecruitAnnounce() {
     return (
         <div
             className="flex bg-[#FFFFFF] justify-center content-center w-screen h-screen">
-            <div className="h-[90vh] w-[50%] mt-auto mx-auto">
-                <div className="flex pb-3 w-[85%] justify-center mx-auto">
+            <div className="h-[90vh] lg:w-[50%] mt-auto mx-auto">
+                <div className="flex pb-3 h-[10%] w-[85%] justify-center mx-auto">
                     <Search/>
                 </div>
                 <div
-                    className="flex flex-col h-[77.5%] w-full gap-0 items-center justify-center px-2 border-4 border-y-[#06113C] border-x-transparent">
+                    className="container flex flex-col h-[77.5%] w-full gap-0 items-center justify-start px-2 border-4 border-y-[#06113C] border-x-transparent">
                     <RecruitAnnounceList loading={loading} error={error} posts={posts}/>
                 </div>
                 <div className="flex w-full items-center justify-between ">
@@ -64,7 +65,8 @@ export default function RecruitAnnounce() {
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}/>
                     <div className="w-1/3">
-                        <button onClick={onWriteButtonClick} className="px-3 py-1 bg-[#FF8C32] float-right mr-11">글 작성</button>
+                        <button onClick={onWriteButtonClick}
+                        className="px-3 py-1 mr-5 lg:mr-11 bg-[#FF8C32] float-right ">글 작성</button>
                     </div>
                 </div>
             </div>

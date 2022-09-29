@@ -20,13 +20,12 @@ export default function Comment({comments}) {
     const fetchPostComments = async () => {
         try {
             const API_URI = `${API_ORIGIN}/${post_id}/comments`
-            const response = await axios.post(API_URI, {
+            await axios.post(API_URI, {
                 "user_id": userData._id,
                 "content": commentContent
             },{headers: {
                 Authorization: `Bearer ${fetchToken()}`
             }});
-            // console.log(response.data) 
 
         } catch (e) {
             console.log(e)

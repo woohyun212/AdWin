@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import {ReactComponent as SpeechBubble } from 'images/speech-bubble-svgrepo-com.svg';
-import { Link } from 'react-router-dom';
 import Comment from 'components/Layout/Comment';
 import { API_ORIGIN } from 'components/APIRequest/APIRequest';
-import { fetchToken, fetchUserData } from 'Auth';
+import { CheckToken, fetchToken, fetchUserData } from 'Auth';
 
 
 const RECRUIT_TYPE_DATA = [
@@ -17,6 +16,7 @@ const RECRUIT_TYPE_DATA = [
     ];
 
 export default function RecruitAnnounceDetail() {
+    CheckToken();
     let { post_id } = useParams();
     let navigate = useNavigate();
     const userData = fetchUserData();
@@ -59,7 +59,7 @@ export default function RecruitAnnounceDetail() {
             }
             try {
                 const API_URI = `${API_ORIGIN}/likes`
-                const response = await axios.put(API_URI, {
+                await axios.put(API_URI, {
                     "target_id": post_id,
                     "user_id": userData?._id
                   },{headers: {
@@ -104,7 +104,7 @@ export default function RecruitAnnounceDetail() {
             const fetctDeletePost =  () => {
                 try {
                     const API_URI = `${API_ORIGIN}/posts/${post_id}`
-                    const response =  axios.delete(API_URI,
+                    axios.delete(API_URI,
                         {headers: {
                         Authorization: `Bearer ${fetchToken()}`
                     }});
@@ -126,29 +126,28 @@ export default function RecruitAnnounceDetail() {
 
     return(
         <div  className="flex flex-col bg-[#FFFFFF] pt-[0vh] w-screen h-screen overflow-scroll">
-            <div className="flex w-full sm:w-[75%] lg:w-[55%] mt-[14vh] mx-auto h-auto \  
-            justify-center content-center border-t-black border-t ">
+            <div className="flex w-full sm:w-[75%] lg:w-[55%] mt-[14vh] mx-auto h-auto justify-center content-center border-t-black border-t ">
                 {/* 글 내용 들어가는 곳 */}
                 <div className="flex flex-col w-full overflow-x-hidden border-x border-black ">
-                    <div className='flex flex-row w-full my-4 gap-6 mx-4'>
+                    <div className='flex flex-row w-full py-4 gap-2 px-4 justify-between'>
                         <span className="flex flex-col text-3xl justify-center content-center w-[10%]">
-                            <p className="whitespace-nowrap justify-center mx-auto">
+                            <p className="whitespace-nowrap justify-center mx-auto text-[0.75rem] lg:text-base">
                             {postDetail.area}
                             </p>
                             <hr className="m-1 border-black"></hr>
-                            <p className="whitespace-nowrap justify-center mx-auto"
+                            <p className="whitespace-nowrap justify-center mx-auto text-[0.75rem] lg:text-base"
                             >{postDetail.recruit_type}</p>
                         </span>
-                        <h1 className='flex sm:w-[35%] lg:w-[65%] text-3xl self-center'>{postDetail.title}</h1>
-                        <button type='button' onClick={onUpdatePostClick} className=' self-center align-middle whitespace-nowrap px-4 py-[0.75rem] \
-                             h-12 bg-[#FF8C32] rounded-md'>글 수정</button>
-                        <button type='button' onClick={OnDeletePostClick} className="h-12 px-3 whitespace-nowrap self-center \
-                             bg-[#EEEEEE] border border-[#CCCCCC] rounded-md align-middle float-right">글 삭제</button>  
+                        <h1 className='flex sm:w-[35%] lg:w-[65%] text-[1.5rem] lg:text-3xl self-center text-left'>{postDetail.title}</h1>
+                        <div className='flex flex-col md:flex-row justify-between gap-y-2 gap-x-4 '>
+                        <button type='button' onClick={onUpdatePostClick} className='self-center align-middle whitespace-nowrap bg-[#FF8C32] rounded-md border border-[#ff6f00] lg:px-4 lg:h-12 '>글 수정</button>
+                        <button type='button' onClick={OnDeletePostClick} className="self-center align-middle whitespace-nowrap bg-[#EEEEEE] rounded-md border border-[#CCCCCC] lg:px-4 lg:h-12 ">글 삭제</button>     
+                        </div> 
                     </div>
                     <hr className=' border-black'/>
                     <div className='flex flex-row justify-between my-2 mx-auto w-full'>
-                        <span className="flex text-sm justify-center whitespace-nowrap self-center w-[15%]">{postDetail.nickname}</span>
-                        <span className='flex text-sm justify-center content-center  w-[10%]'>{postDetail.created_at}</span>                     
+                        <span className="flex text-sm justify-center whitespace-nowrap self-center w-[15%] ml-10">{postDetail.nickname}</span>
+                        <span className='flex text-sm justify-center content-center w-[20%] mr-10'>{postDetail.created_at}</span>                     
                     </div>
                     <hr className=' border-black'/>
                     <div className='w-full px-12 pt-5 '

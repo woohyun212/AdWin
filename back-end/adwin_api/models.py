@@ -141,6 +141,7 @@ class PostType(str, Enum):
     CounselorRecruit = "CounselorRecruit"
     SalePromotion = "SalePromotion"
     RealEstateNews = "RealEstateNews"
+    FreeBoard = "FreeBoard"
 
 
 class RecruitType(str, Enum):

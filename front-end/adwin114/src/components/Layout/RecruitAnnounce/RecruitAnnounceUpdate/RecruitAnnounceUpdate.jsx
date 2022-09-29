@@ -8,16 +8,14 @@ import { fetchToken, fetchUserData } from 'Auth';
 
 const AREA_DATA = [
     { id: null, value: '지역을 선택해주세요' },
-    { id: '서울', value: '서울' },
-    { id: '경기', value: '경기' },
-    { id: '인천', value: '인천' },
-    { id: '강원', value: '강원' },
-    { id: '충청', value: '충청' },
-    { id: '전라', value: '전라' },
-    { id: '경상', value: '경상' },
-    { id: '제주', value: '제주' },
+    { id: '서울특별시', value: '서울특별시' },
+    { id: '경기·인천', value: '경기·인천' },
+    { id: '부산·울산·경남', value: '부산·울산·경남' },
+    { id: '대구·경북', value: '대구·경북' },
+    { id: '대전·충청', value: '대전·충청' },
+    { id: '광주·전라', value: '광주·전라' },
+    { id: '강원·제주', value: '강원·제주' }
     ];
-
 const RECRUIT_TYPE_DATA = [
     { id: null, value: '모집 유형을 선택해주세요' },
     { id: "SalesPerson", value: '직원' },
@@ -31,7 +29,7 @@ function changeRecruitTypeValueToId (_value) {
     return RECRUIT_TYPE_DATA.filter(el => el.value === _value)[0]?.id; 
 }
     
-export default function RecruitAnnounceWrite() {
+export default function RecruitAnnounceUpdate() {
     let navigate = useNavigate();
     const {post_id} = useParams();
 

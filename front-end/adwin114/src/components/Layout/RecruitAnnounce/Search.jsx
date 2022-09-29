@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
 
 const AREA_DATA = [
-    { id: null, value: '지역' },
-    { id: '0001', value: '서울' },
-    { id: '0002', value: '경기' },
-    { id: '0003', value: '인천' },
-    { id: '0004', value: '강원' },
-    { id: '0005', value: '충청' },
-    { id: '0006', value: '전라' },
-    { id: '0007', value: '경상' },
-    { id: '0008', value: '제주' },
+    { id: null, value: '지역을 선택해주세요' },
+    { id: '서울특별시', value: '서울특별시' },
+    { id: '경기·인천', value: '경기·인천' },
+    { id: '부산·울산·경남', value: '부산·울산·경남' },
+    { id: '대구·경북', value: '대구·경북' },
+    { id: '대전·충청', value: '대전·충청' },
+    { id: '광주·전라', value: '광주·전라' },
+    { id: '강원·제주', value: '강원·제주' }
     ];
 
 const RECRUIT_TYPE_DATA = [
@@ -51,10 +50,10 @@ export default function SearchBar() {
     };
 
     return (
-        <div className="w-full flex flex-wrap items-stretch p-4 justify-between">
+        <div className="w-full inline-flex 1 items-stretch p-4 justify-center white-space-no-wrap">
 
             <div
-                className='flex justify-center items-center border-2 border-solid border-[#BBBBBB] white-space-no-wrap '>
+                className='flex justify-center items-center border-2 border-solid border-[#BBBBBB] overflow-hidden '>
                 <select
                     onChange={handleDropArea}
                     className='flex mx-2 h-full justify-center items-center px-2 border-[#BBBBBB]  
@@ -67,18 +66,20 @@ export default function SearchBar() {
                 </select>
             </div>
 
+            <div className='white-space-no-wrap inline-flex grow'>
             <input
                 type="text"
                 className="flex px-2 py-1 border-y-2 border-solid border-[#BBBBBB] text-sm leading-snug
-                 text-gray-700  shadow-none outline-none focus:outline-none w-full
+                 text-gray-700  shadow-none outline-none focus:outline-none w-full white-space-no-wrap
                  font-normal flex-1 placeholder-gray-400"
                 placeholder="검색할 내용을 입력하세요"/>
                 
-            <span
+            <button type='button' onClick={() => {}}
                 className="flex justify-center items-center font-normal white-space-no-wrap border-y-2 border-r-2 border-solid
                 border-[#BBBBBB] text-sm px-2 py-1 text-gray-800 mr-10">
                 검색
-            </span>
+            </button>
+            </div>
 
             <div
                 className='flex justify-center items-center border-2 border-solid border-[#BBBBBB] white-space-no-wrap '>

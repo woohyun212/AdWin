@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import axios from "axios";
 import { API_ORIGIN } from "components/APIRequest/APIRequest";
-import { fetchProfileImage, fetchToken, fetchUserData } from "Auth";
+import { fetchToken, fetchUserData } from "Auth";
 import {ReactComponent as PersonSVG} from 'images/person-svgrepo-com.svg';
 
 export default function CommentBlock({comment}) {
@@ -37,12 +37,11 @@ export default function CommentBlock({comment}) {
         <>
             <div className="flex flex-row h-[8vh] gap-3 self-center mt-2">
                 {comment.profile_image === null
-                    ? <PersonSVG className="h-16 w-16 aspect-square rounded-full bg-white self-center border border-black"/>
-                    : <img
-                    className="h-16 aspect-square rounded-full bg-white self-center border border-black"
+                    ? <PersonSVG className="ml-2 h-16 w-16 aspect-square rounded-full bg-white self-center border border-black"/>
+                    : <img className="ml-2 h-16 w-16 aspect-square rounded-full bg-white self-center border border-black"
                     alt="프로필 사진"
                     src={comment.profile_image}/>}
-                <p className="text-center self-center">
+                <p className="text-center self-center text-sm text-gray-500">
                     {comment.nickname}
                 </p>
                 <p className="text-left self-center w-[30vw]">

@@ -5,7 +5,6 @@ from fastapi.responses import JSONResponse
 
 import database as db
 from models import *
-from routers.auth import get_current_active_user, read_users_me
 from routers.likes import delete_like, get_likes_data
 from routers.users import get_user_by_id
 from utils import *

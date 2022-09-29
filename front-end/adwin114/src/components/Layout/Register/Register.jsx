@@ -3,7 +3,7 @@ import {fetchToken, setProfileImage, setToken} from "Auth";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {API_ORIGIN} from 'components/APIRequest/APIRequest';
-import {ReactComponent as AdWinLogo} from 'assets/WINAD.svg';
+import {ReactComponent as BunyangmonLogo} from 'assets/dragon_color.svg';
 import {ReactComponent as PersonSVG} from 'images/person-svgrepo-com.svg';
 
 export default function Register() {
@@ -196,8 +196,9 @@ export default function Register() {
             {
                 fetchToken()
                     ? ("이미 로그인되어 있습니다")
-                    : (<> < div className = 'flex flex-col justify-center items-center w-1/3 h-1/5' > <AdWinLogo className='h-full'/>
-                    <p>ADWIN114</p>
+                    : (<> < div className = 'flex flex-col justify-center items-center w-1/3 h-1/5' >
+                         <BunyangmonLogo className='h-full'/>
+                    <p>분양몬</p>
                 </div>
 
                 <form className="grid grid-cols-2 gap-4">
@@ -205,7 +206,7 @@ export default function Register() {
                         <input
                             type="text"
                             id="username"
-                            className='border-b border-gray-500 w-[20vw] mx-20 my-1 p-1 pl-4 '
+                            className='border-b border-gray-500 w-[37.5vw] lg:w-[20vw] mx-0 my-1 p-1 pl-4 '
                             onChange={(e) => handleUsernameChange(e)}
                             value={username}
                             placeholder='아이디'
@@ -213,7 +214,7 @@ export default function Register() {
                             minLength={4}
                             maxLength={20}/>
                         <sub
-                            className={`float-right self-end mr-20 my-1 ${usernameVaild[0]
+                            className={`text-[0.25rem] lg:text-[0.75rem] leading-3 float-right self-end mr-[15%] my-1 ${usernameVaild[0]
                                 ? "text-[#88CC88]"
                                 : "text-[#EE7777]"}`}>{usernameVaild[1]}</sub>
                     </div>
@@ -221,7 +222,7 @@ export default function Register() {
                         <input
                             type="email"
                             id="email"
-                            className='border-b border-gray-500 w-[20vw] mx-20 my-1 p-1 pl-4 '
+                            className='border-b border-gray-500 w-[37.5vw] lg:w-[20vw] mx-0 my-1 p-1 pl-4 '
                             onChange={(e) => handleEmailChange(e)}
                             value={email}
                             placeholder='이메일'
@@ -229,7 +230,7 @@ export default function Register() {
                             minLength={5}
                             maxLength={40}/>
                         <sub
-                            className={`float-right self-end mr-20 my-1 ${emailValid[0]
+                            className={`text-[0.25rem] lg:text-[0.75rem] leading-3 float-right self-end mr-[15%] my-1 ${emailValid[0]
                                 ? "text-[#88CC88]"
                                 : "text-[#EE7777]"}`}>{emailValid[1]}</sub>
                     </div>
@@ -237,7 +238,7 @@ export default function Register() {
                         <input
                             type="text"
                             id="nickname"
-                            className='border-b border-gray-500 w-[20vw] mx-20 my-1 p-1 pl-4 '
+                            className='border-b border-gray-500 w-[37.5vw] lg:w-[20vw] mx-0 my-1 p-1 pl-4 '
                             onChange={(e) => handleNicknameChange(e)}
                             value={nickname}
                             placeholder='별명'
@@ -245,7 +246,7 @@ export default function Register() {
                             minLength={2}
                             maxLength={10}/>
                         <sub
-                            className={`float-right self-end mr-20 my-1 ${nicknameValid[0]
+                            className={`text-[0.25rem] lg:text-[0.75rem] leading-3 float-right self-end mr-[15%] my-1 ${nicknameValid[0]
                                 ? "text-[#88CC88]"
                                 : "text-[#EE7777]"}`}>{nicknameValid[1]}</sub>
                     </div>
@@ -253,7 +254,7 @@ export default function Register() {
                         <input
                             type="password"
                             id="password"
-                            className='border-b border-gray-500 w-[20vw] mx-20 my-1 p-1 pl-4 '
+                            className='border-b border-gray-500 w-[37.5vw] lg:w-[20vw] mx-0 my-1 p-1 pl-4 '
                             onChange={(e) => handlePasswordChange(e)}
                             // value={"*".repeat((password.length > 0 ? password.length-1 : 0))+password.slice(-1)}
                             value={password}
@@ -262,7 +263,7 @@ export default function Register() {
                             minLength={8}
                             maxLength={64}/>
                         <sub
-                            className={`float-right self-end mr-20 my-1 ${passwordValid[0]
+                            className={`text-[0.25rem] lg:text-[0.75rem] leading-3 float-right self-end mr-[15%] my-1 ${passwordValid[0]
                                 ? "text-[#88CC88]"
                                 : "text-[#EE7777]"}`}>{passwordValid[1]}</sub>
                     </div>
@@ -270,7 +271,7 @@ export default function Register() {
                         <input
                             type="password"
                             id="passwordCheck"
-                            className='border-b border-gray-500 w-[20vw] mx-20 my-1 p-1 pl-4 '
+                            className='border-b border-gray-500 w-[37.5vw] lg:w-[20vw] mx-0 my-1 p-1 pl-4 '
                             onChange={(e) => handlePasswordCheckChange(e)}
                             value={passwordCheck}
                             placeholder='비밀번호 확인'
@@ -278,14 +279,13 @@ export default function Register() {
                             minLength={8}
                             maxLength={64}/>
                         <sub
-                            className={`float-right self-end mr-20 my-1 ${passwordCheckValid[0]
+                            className={`text-[0.25rem] lg:text-[0.75rem] leading-3 float-right self-end mr-[15%] my-1 ${passwordCheckValid[0]
                                 ? "text-[#88CC88]"
                                 : "text-[#EE7777]"}`}>{passwordCheckValid[1]}</sub>
                     </div>
                     <label
                         htmlFor="user_image"
-                        className='flex border-b border-gray-500 w-[20vw]
-                        mx-20 my-1 p-1 pl-4 gap-4'>
+                        className='flex border-b border-gray-500 w-[37.5vw] lg:w-[20vw] mx-0 my-1 p-1 pl-4 gap-4 '>
                         <label
                             htmlFor="user_image"
                             className='1/2 my-1 flex justify-center mx-auto items-center'>
