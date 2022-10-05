@@ -28,8 +28,7 @@ async def create_post(post_type: PostType, post_data: PostModelIn = Body(...),
     if current_user:
         if post_type != PostType.CounselorRecruit:
             post_data["recruit_type"] = None
-            if post_type == PostType.RealEstateNews:
-                post_data["area"] = None
+
         await initialize_data(data=post_data, post_type=post_type,
                               recruit_type=post_data["recruit_type"], views=0,
                               preview=get_string_from_html(post_data["content"])[:30],
@@ -70,8 +69,19 @@ async def get_post_detail(post_id: str,
 
 
 @router.get("", response_description="Get 8 posts")
-async def get_8_posts(post_type: PostType, page_number: int = 1):
-    _posts: list[dict] = await db.post_collection.find({"post_type": post_type},
+async def get_8_posts(post_type: PostType, page_number: int = 1,
+                      area='', recruit_type='', real_estate_type='', search=''):
+    _filter = {"post_type": post_type}
+    if area != '' and area != 'null':
+        _filter['area'] = area
+    if recruit_type != '' and recruit_type != 'null':
+        _filter['recruit_type'] = recruit_type
+    if real_estate_type != '' and real_estate_type != 'null':
+        _filter['real_estate_type'] = real_estate_type
+    if search != '' and search != 'null':
+        regx = re.compile(search, re.IGNORECASE)
+        _filter['title'] = {"$regex": regx}
+    _posts: list[dict] = await db.post_collection.find(_filter,
                                                        skip=(page_number - 1) * 8,
                                                        projection={"content": False}) \
         .sort("created_at", -1).to_list(length=8)

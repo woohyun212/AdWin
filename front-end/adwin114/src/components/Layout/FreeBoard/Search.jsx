@@ -15,34 +15,31 @@ import React from 'react';
 
 
 export default function SearchBar() {
-    // const [selectedAreaValue, setSelectedAreaValue] = useState(
-    //     '지역'
-    // );
-    // const [selectedRecruitTypeValue, setSelectedRecruitTypeValue] = useState(
-    //     '정렬'
-    // );
-
-    // const handleDropArea = (e) => {
-    //     const {value} = e.target;
-    //     setSelectedAreaValue(AREA_DATA.filter(el => el.value === value)[0].id);
-    //     console.log(selectedAreaValue);
-    // };
-
-    // const handleDropRecruitType = (e) => {
-    //     const {value} = e.target;
-    //     setSelectedRecruitTypeValue(RECRUIT_TYPE_DATA.filter(el => el.value === value)[0].id);
-    //     console.log(selectedRecruitTypeValue);
-    // };
+    const [searchText, setSearchText] = useState('');
+    const handleSearch = (e) => {
+        setSearchText(e.target.value)
+        setSearch(e.target.value);
+    };
+    
+    const onKeyPress = (e) => {
+        if (e.key == 'Enter') { 
+            
+            fetctPosts({area:'',
+                recruit_type:'',
+                real_estate_type:'',
+                search: searchText})
+                }
+            };
 
     return (
         <div className="w-full flex flex-wrap items-stretch p-4 justify-between">
 
             {/* <div
-                className='flex justify-center items-center border-2 border-solid border-[#BBBBBB] white-space-no-wrap '>
+                className='flex justify-center items-center border-2 border-solid border-[#BBBBBB] whitespace-nowrap '>
                 <select
                     onChange={handleDropArea}
                     className='flex mx-2 h-full justify-center items-center px-2 border-[#BBBBBB]  
-            font-normal white-space-no-wrap text-gray-800 '>
+            font-normal whitespace-nowrap text-gray-800 '>
                     {
                         AREA_DATA.map(el => {
                             return <option key={el.id}>{el.value}</option>;
@@ -59,17 +56,17 @@ export default function SearchBar() {
                 placeholder="검색할 내용을 입력하세요"/>
                 
             <span
-                className="flex justify-center items-center font-normal white-space-no-wrap border-y-2 border-x-2 border-solid
+                className="flex justify-center items-center font-normal whitespace-nowrap border-y-2 border-x-2 border-solid
                 border-[#BBBBBB] text-sm px-2 py-1 text-gray-800 mr-10">
                 검색
             </span>
 
             {/* <div
-                className='flex justify-center items-center border-2 border-solid border-[#BBBBBB] white-space-no-wrap '>
+                className='flex justify-center items-center border-2 border-solid border-[#BBBBBB] whitespace-nowrap '>
                 <select
                     onChange={handleDropRecruitType}
                     className='flex mx-1 h-full justify-center items-center px-2 border-[#BBBBBB] 
-            font-normal white-space-no-wrap text-gray-800 '>
+            font-normal whitespace-nowrap text-gray-800 '>
                 {RECRUIT_TYPE_DATA.map(el => {
                             return <option key={el.id}>{el.value}</option>;
                         })

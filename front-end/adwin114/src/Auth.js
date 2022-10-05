@@ -38,7 +38,7 @@ export const isTokenExpired = () => {
 };
 
 export const CheckToken = () => {
-    console.log("checking token...");
+    // console.log("checking token...");
     if (isTokenExpired()) {
         let navigate = useNavigate
         alert("회원님의 토큰이 만료되었습니다. 다시 로그인해주세요.");

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
-import ClassicEditor from 'ckeditor5/build/ckeditor';
+import Editor  from 'ckeditor5-custom-build/build/ckeditor';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_ORIGIN } from "components/APIRequest/APIRequest";
@@ -16,36 +16,47 @@ const AREA_DATA = [
     { id: '광주·전라', value: '광주·전라' },
     { id: '강원·제주', value: '강원·제주' }
     ];
-    
-    
-    
-    
-    
-const RECRUIT_TYPE_DATA = [
-    { id: null, value: '모집 유형을 선택해주세요' },
-    { id: "SalesPerson", value: '직원' },
-    { id: "TeamLeader", value: '팀장' },
-    { id: "Director", value: '본부장' },
-    { id: "General", value: '총괄' },
-    { id: "Agency", value: '대행사' },
+    const RECRUIT_TYPE_DATA = [
+        { id: null, value: '모집 유형을 선택해주세요' },
+        { id: "SalesPerson", value: '직원' },
+        { id: "TeamLeader", value: '팀장' },
+        { id: "Director", value: '본부장' },
+        { id: "General", value: '총괄' },
+        { id: "Agency", value: '대행사' },
     ];
-
+    const REAL_ESTATE_TYPE_DATA = [
+        { id: null , value: '물건' },
+        { id: '아파트', value: '아파트' },
+        { id: '빌라', value: '빌라' },
+        { id: '지식산업센터', value: '지식산업센터' },
+        { id: '상가', value: '상가' },
+        { id: '오피스텔', value: '오피스텔' },
+        { id: '토지', value: '토지' },
+        { id: '기타', value: '기타' },
+        ];
+        
+    
     
 export default function RecruitAnnounceWrite() {
     let navigate = useNavigate();
     
     const [selectedAreaValue, setSelectedAreaValue] = useState(
-        '지역'
+        null
     );
     const [selectedRecruitTypeValue, setSelectedRecruitTypeValue] = useState(
-        '정렬'
+        null
+    );
+
+    const [selectedRealEstateTypeValue, setSelectedRealEstateTypeValue] = useState(
+        null
     );
 
     const [postContents, setPostContents] = useState({
         title: '',
         content: '',
         area: selectedAreaValue,
-        recruit_type: selectedRecruitTypeValue
+        recruit_type: selectedRecruitTypeValue,
+        real_estate_type: selectedRealEstateTypeValue
       })
     
     const handleDropArea = (e) => {
@@ -58,6 +69,12 @@ export default function RecruitAnnounceWrite() {
         const {value} = e.target;
         setSelectedRecruitTypeValue(RECRUIT_TYPE_DATA.filter(el => el.value === value)[0].id)
         // console.log(selectedRecritTypeValue)
+    };
+
+    const handleDropRealEstateType = (e) => {
+        const {value} = e.target;
+        setSelectedRealEstateTypeValue(REAL_ESTATE_TYPE_DATA.filter(el => el.value === value)[0].id)
+        // console.log(selectedRealEstateTypeValue)
     };
 
     const handleChangePostContent = (e) => {
@@ -78,16 +95,15 @@ export default function RecruitAnnounceWrite() {
             navigate('/recruit-announce');
           }
     };
-    // const [response, setResponse] = useState("");
-    const [error, setError] = useState(null);
     const handleSummbitButton = async (e) =>{
         if (window.confirm("제출 하시겠습니까?")) {
             let copy_postContents = postContents;
             copy_postContents.user_id = fetchUserData()._id;
             copy_postContents.area = selectedAreaValue;
             copy_postContents.recruit_type = selectedRecruitTypeValue;
+            copy_postContents.real_estate_type = selectedRealEstateTypeValue;
             setPostContents(copy_postContents);
-            if (postContents.area === null || postContents.recruit_type === null){
+            if (postContents.area === null || postContents.recruit_type === null || postContents.real_estate_type === null ){
                 alert("지역과 모집 유형을 선택해주세요.");
                 return null;
             } else if (postContents.title === ""){
@@ -100,8 +116,8 @@ export default function RecruitAnnounceWrite() {
 
             const fetctPosts = async () => {
                 try {
-                    setError(null);
                     const API_URI = `${API_ORIGIN}/posts?post_type=CounselorRecruit`
+                    console.log(postContents);
                     let response = await axios.post(API_URI, postContents,
                         {headers: {
                         Authorization: `Bearer ${fetchToken()}`
@@ -110,7 +126,6 @@ export default function RecruitAnnounceWrite() {
                         navigate(`/recruit-announce/${result.data._id}`); 
                       });
                 } catch (e) {
-                    setError(e);
                     alert(e.response.data.detail[0].msg);
                 }
             };
@@ -137,9 +152,21 @@ export default function RecruitAnnounceWrite() {
                         <select
                         onChange={handleDropArea} 
                         className='flex mx-2 h-full justify-center items-center px-2 border-[#BBBBBB]
-                                    font-normal white-space-no-wrap text-gray-800 '>
+                                    font-normal whitespace-nowrap text-gray-800 '>
                         { AREA_DATA.map(el => { 
                             return <option key={el.id}>{el.value}</option>; }) }
+                        </select>
+                    </div>
+                    <div className='flex flex-row w-full'>
+                        <label htmlFor="title" className="text-2xl font-bold text-gray-900">물건</label>
+                        <select
+                        onChange={handleDropRealEstateType}
+                        className='flex mx-1 h-full justify-center items-center px-2 border-[#BBBBBB] 
+                        font-normal whitespace-nowrap text-gray-800 '>{
+                        REAL_ESTATE_TYPE_DATA.map(el => {
+                                return <option key={el.id}>{el.value}</option>;
+                        })
+                        }
                         </select>
                     </div>
                     <div className='flex flex-row w-full'>
@@ -147,7 +174,7 @@ export default function RecruitAnnounceWrite() {
                         <select
                         onChange={handleDropRecruitType}
                         className='flex mx-1 h-full justify-center items-center px-2 border-[#BBBBBB] 
-                        font-normal white-space-no-wrap text-gray-800 '>{
+                        font-normal whitespace-nowrap text-gray-800 '>{
                         RECRUIT_TYPE_DATA.map(el => {
                                 return <option key={el.id}>{el.value}</option>;
                         })
@@ -166,7 +193,7 @@ export default function RecruitAnnounceWrite() {
                     placeholder="제목을 입력하세요"
                     required="required"/>
                 </div>
-                <CKEditor editor={ClassicEditor}
+                <CKEditor editor={Editor }
                 placeholder="??"
                 data=""
                 onReady={editor => {
@@ -189,9 +216,9 @@ export default function RecruitAnnounceWrite() {
                     editor.ui.view.editable.element.style.maxHeight = "500px";
                 }}/>
                 <div className='flex w-full justify-center mx-auto pb-52'>
-                <button type="button" className="m-1.5 w-20 bg-[#FF8C32]"
+                <button type="button" className="m-1.5 w-20 bg-pointColor"
                 onClick={handleSummbitButton}>제출</button>
-                <button type="button" className="m-1.5 w-20 bg-white border border-[#AAAAAA]"
+                <button type="button" className="m-1.5 w-20 bg-pointColor border border-[#AAAAAA]"
                 onClick={handelCancleButton}>취소</button>
             </div>
             </div>

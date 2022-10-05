@@ -13,6 +13,7 @@ post_collection = db['Post']
 comment_collection = db['Comment']
 re_comment_collection = db['ReComment']
 like_collection = db['Like']
+news_collection = db['News']
 
 if __name__ == "__main__":
     pass

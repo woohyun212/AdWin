@@ -1,0 +1,1 @@
+C:\Users\HsAdwin\AppData\Local\Programs\Python\Python310\python.exe -m uvicorn main:app --reload --host=0.0.0.0

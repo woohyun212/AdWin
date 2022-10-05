@@ -2,7 +2,6 @@
 import React, {useState, useEffect} from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars} from "@fortawesome/free-solid-svg-icons";
-import {ReactComponent as BunyangmonLogo} from 'assets/dragon.svg';
 import {Link} from "react-router-dom";
 import {useLocation} from 'react-router-dom';
 import { fetchToken, fetchUserData } from "Auth";
@@ -24,17 +23,18 @@ export default function Navbar({fixed}) {
         <>
         <nav
             className={`h-[9vh] w-full flex flex-wrap items-center justify-between border-b border-${Color} ${useLocation().pathname === '/'
-                ? 'bg-transparent'
+                ? 'bg-white'
                 : 'bg-white'} text-${Color} transition-color ease-in-out duration-500`}>
             <div
-                className="container static px-4 mx-auto flex flex-wrap items-center justify-between ">
+                className="container static mx-auto flex flex-wrap items-center justify-between ">
                 <div
                     className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
                     <Link
-                        className="text-xs tracking-widest font-sans mr-4 whitespace-nowrap uppercase"
+                        className="flex text-xs tracking-widest font-sans whitespace-nowrap uppercase self-center"
                         to="/">
-                        <BunyangmonLogo className="h-[6vh] self-center justify-center mx-auto"/>
-                        Bunyangmon
+                        {/* <BunyangmonLogo className="h-[6vh] self-center justify-center mx-auto"/> */}
+                        
+                        <img className="h-12 self-center m-auto" src={require("images/logo.png")} alt=""/>
                     </Link>
                     <button
                         className="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none "
@@ -44,7 +44,7 @@ export default function Navbar({fixed}) {
                     </button>
                 </div>
                 <div
-                    className={`absolute lg:flex items-center w-[75vw]  left-[12.5vw] lg:left-[15.5vw] md:w-[75vw] md:right-[9vw]` + (
+                    className={`absolute lg:flex items-center w-[75vw]  left-[12.5vw] lg:left-[17.5vw] md:w-[75vw] md:right-[9vw]` + (
                         navbarOpen
                             ? " flex top-[9vh] bg-white/90 border border-black lg:bg-transparent"
                             : " hidden"
@@ -60,9 +60,9 @@ export default function Navbar({fixed}) {
                         <li className="px-6 py-2">
                             <Item title="커뮤니티" to="/freeboard"/>
                         </li>
-                        <li className="px-6 py-2">
+                        {/* <li className="px-6 py-2">
                             <Item title="뉴스" to="/news"/>
-                        </li>
+                        </li> */}
                         {/* <li className="px-6 py-2">
                             <Item title="문의사항" to="/qna"/>
                         </li> */}
@@ -83,8 +83,14 @@ export default function Navbar({fixed}) {
                                 alt="프로필 사진"
                                 src={fetchProfileImage()}/></div>
                             </Link> */}
+                            <div  className={`flex ` + (
+                                    navbarOpen
+                                        ? " flex-col"
+                                        : " felx-row"
+                                )}>
                             <Item title="내 정보" to="/profile" addClass="px-3 py-2"/>
                             <Item title="로그아웃" to="/logout" addClass="px-3 py-2"/>
+                            </div>
                         </div>
                             )
                             : (

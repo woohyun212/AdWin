@@ -1,9 +1,43 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import FreeBoardCard from "./FreeBoardCard";
 import NewsCard from "./NewsCard";
 import {Link} from "react-router-dom";
+import axios from "axios";
+import { API_ORIGIN } from "components/APIRequest/APIRequest";
+
+
 
 export default function Section3() {
+    const [posts, setPosts] = useState([]);
+    const [news, setNews] = useState([]);
+    const fetchPosts = async () => {
+        try {
+            setPosts([]);
+            const API_URI = `${API_ORIGIN}/posts?post_type=FreeBoard&page_number=1`
+            const response = await axios.get(API_URI);
+            // console.log(response.data["posts"]);
+            setPosts(response.data["posts"]);
+        } catch (e) {
+            console.log(e)
+        }
+    };
+    const fetchNews = async () => {
+        try {
+            setNews([]);
+            const API_URI = `${API_ORIGIN}/news`
+            const response = await axios.get(API_URI);
+            setNews(response.data);
+            // console.log(response.data);
+        } catch (e) {
+            console.log(e)
+        }
+    };
+    useEffect(() => {
+        fetchPosts();
+        fetchNews();
+    // eslint-disable-next-line
+    }, []);
+
     return (
         <section
             className="m-auto flex flex-col h-screen w-screen items-center justify-center bg-white text-[#06113C]">
@@ -12,95 +46,38 @@ export default function Section3() {
             <div
                 className='flex flex-col md:flex-row gap-x-[2vw] gap-y-[7vh] h-[55vh] w-[80vw] mb:w-[60vw] mx-auto mb-[17.4vh] lg:w-[60vw] leading-9 font-bold'>
                 {/* 인기1개 최상위 3개 */}
-                <div className="자유게시판 w-full md:w-[50%] h-[30vh]">
-                    <div className='flex justify-between'>
-                        <span className='ml-[1.1vw]'>자유 게시판</span>
-                        <Link className=' text-2xl' to="frb">+</Link>
-                    </div>
-                    <div className='h-full w-full border-2 border-y-[#06113C] border-x-transparent'>
-                        <FreeBoardCard
-                            id={1}
-                            title={"이거슨 제목이요"}
-                            author={"이거슨 이름이로다"}
-                            publishedAt={"2022-08-14"}
-                            Views={0}
-                            Likes={0}
-                            thumnailUrl={require("images/carousel/분양2.png")}/>
-                        <hr className="border-[#06113C] opacity-30"/>
-                        <FreeBoardCard
-                            id={2}
-                            title={"이것은 아무런 의미가 없는 제목"}
-                            author={"이것은 이름이로다"}
-                            publishedAt={"2022-08-14"}
-                            Views={0}
-                            Likes={0}/>
-                        <hr className="border-[#06113C] opacity-30"/>
-                        <FreeBoardCard
-                            id={3}
-                            title={"이거슨 제목이요"}
-                            author={"홍길동s"}
-                            publishedAt={"2022-08-14"}
-                            Views={0}
-                            Likes={0}/>
-                        <hr className="border-[#06113C] opacity-30"/>
-                        <FreeBoardCard
-                            id={4}
-                            title={"이거슨 제목이요"}
-                            author={"김아무개"}
-                            publishedAt={"2022-08-14"}
-                            Views={0}
-                            Likes={0}/>
-                    </div>
-                </div>
                 <div className="뉴스 w-full md:w-[50%] h-[30vh]">
                     <div className='flex justify-between'>
                         <span className='ml-[1.1vw]'>뉴스</span>
                         <Link className=' text-2xl' to="news">+</Link>
                     </div>
                     <div className='h-full w-full border-2 border-y-[#06113C] border-x-transparent'>
-                        <NewsCard
-                            Id={1}
-                            title={"긴제목ㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱ"}
-                            publishedAt={"2022-08-15"}
-                            Views={1}
-                            Likes={1}/>
+                        {/* <NewsCard article=}/> */}
                         <hr className="border-[#06113C] opacity-30"/>
-                        <NewsCard Id={2} title={"ㅉ"} publishedAt={"2022-08-15"} Views={1} Likes={1}/>
-                        <hr className="border-[#06113C] opacity-30"/>
-                        <NewsCard
-                            Id={3}
-                            title={"[자막뉴스] 샤워 5분 이내 권고.. 유럽 최악의 기후 상황"}
-                            publishedAt={"2022-08-15"}
-                            Views={1}
-                            Likes={1}/>
-                        <hr className="border-[#06113C] opacity-30"/>
-                        <NewsCard
-                            Id={4}
-                            title={"평택 ‘오션센트럴비즈’ …교통 호재, 편의성 ↑"}
-                            publishedAt={"2022-08-15"}
-                            Views={1}
-                            Likes={1}/>
-                        <hr className="border-[#06113C] opacity-30"/>
-                        <NewsCard
-                            Id={5}
-                            title={"평택포승 BIX 개발·동반성장…'오션센트럴비즈' 분양"}
-                            publishedAt={"2022-08-15"}
-                            Views={1}
-                            Likes={1}/>
-                        <hr className="border-[#06113C] opacity-30"/>
-                        <NewsCard
-                            Id={6}
-                            title={"골드랜드제이앤제이, 미래산업 거점도시 부상 평택서 `오션센트럴비즈` 공급"}
-                            publishedAt={"2022-08-15"}
-                            Views={1}
-                            Likes={1}/>
-                        <hr className="border-[#06113C] opacity-30"/>
-                        <NewsCard
-                            Id={7}
-                            title={"경기 평택에 초대형 지식산업센터 ‘오션센트럴비즈’ 공급"}
-                            publishedAt={"2022-08-15"}
-                            Views={1}
-                            Likes={1}/>
+                        {
+                            news?.map((article) =>(
+                            <React.Fragment key={article._id}>
+                                <NewsCard article={article}/>
+                                <hr className="border-[#06113C] w-full opacity-30"/>
+                            </React.Fragment>)
+                            )
+                        }
+                    </div>
+                </div>
+                <div className="자유게시판 w-full md:w-[50%] h-[30vh]">
+                    <div className='flex justify-between'>
+                        <span className='ml-[1.1vw]'>자유 게시판</span>
+                        <Link className=' text-2xl' to="freeboard">+</Link>
+                    </div>
+                    <div className='h-full w-full border-2 border-y-[#06113C] border-x-transparent'>
+                        {
+                            posts.slice(0, 4).map((post) =>(
+                            <React.Fragment key={post._id}>
+                                <FreeBoardCard post={post}/>
+                                <hr className="border-[#06113C] w-full opacity-30"/>
+                            </React.Fragment>)
+                            )
+                        }
                     </div>
                 </div>
             </div>

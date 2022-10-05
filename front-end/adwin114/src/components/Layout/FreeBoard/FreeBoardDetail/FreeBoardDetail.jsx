@@ -142,7 +142,7 @@ export default function FreeBoardDetail() {
                         <h1 className='flex sm:w-[35%] lg:w-[65%] text-3xl self-center'>{postDetail.title}</h1>
                         <div className='flex gap-6'>
                             <button type='button' onClick={onUpdatePostClick} className='align-middle whitespace-nowrap px-4 py-[0.75rem] \
-                                h-12 bg-[#FF8C32] rounded-md'>글 수정</button>
+                                h-12 bg-pointColor border-[#CCCCCC]  rounded-md'>글 수정</button>
                             <button type='button' onClick={OnDeletePostClick} className="h-12 px-3 whitespace-nowrap 
                                 bg-[#EEEEEE] border border-[#CCCCCC] rounded-md align-middle">글 삭제</button>  
                         </div>

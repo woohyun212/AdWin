@@ -32,15 +32,15 @@ export default function FreeBoard() {
             setLoading(true);
             const API_URI = `${API_ORIGIN}/posts?post_type=FreeBoard&page_number=${currentPage}`
             const response = await axios.get(API_URI);
-            console.log(response.data["posts"]);
+            // console.log(response.data["posts"]);
             setposts(response.data["posts"]);
             setAllPages(response.data["all_pages"])
-            console.log(response.data);
+            // console.log(response.data);
         } catch (e) {
             setError(e);
         }
         setLoading(false);
-        console.log(currentPage)
+        // console.log(currentPage)
     };
     useEffect(() => {
         fetctPosts();
@@ -52,7 +52,7 @@ export default function FreeBoard() {
             className="flex bg-[#FFFFFF] justify-center content-center w-screen h-screen">
             <div className="h-[90vh] lg:w-[50%] mt-auto mx-auto">
                 <div className="flex pb-3 h-[10%] w-[85%] justify-center mx-auto">
-                    <Search/>
+                    {/* <Search/> */}
                 </div>
                 <div
                     className="container flex flex-col h-[77.5%] w-full gap-0 items-center justify-start px-2 border-4 border-y-[#06113C] border-x-transparent">
@@ -66,7 +66,7 @@ export default function FreeBoard() {
                         setCurrentPage={setCurrentPage}/>
                     <div className="w-1/3">
                         <button onClick={onWriteButtonClick}
-                        className="px-3 py-1 mr-5 lg:mr-11 bg-[#FF8C32] float-right ">글 작성</button>
+                        className="px-3 py-1 mr-5 lg:mr-11 bg-pointColor float-right ">글 작성</button>
                     </div>
                 </div>
             </div>

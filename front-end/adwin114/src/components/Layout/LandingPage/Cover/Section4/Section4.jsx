@@ -4,7 +4,7 @@ import CarouselS4 from "./Carousel/CarouselS4";
 
 export default function Section4() {
     return (
-        <section className="m-auto flex flex-col h-screen w-screen items-center justify-end lg:space-y-40 bg-white text-[#06113C] pb-16">
+        <section className="m-auto flex flex-col h-screen w-screen items-center justify-end lg:space-y-40 bg-[#FF8C32] text-[#06113C] pb-16">
             <div className='h-[40vh] w-[400vw] md:w-[250vw] lg:w-full flex items-center justify-center space-x-20'>
                 <CarouselS4/>
             </div>

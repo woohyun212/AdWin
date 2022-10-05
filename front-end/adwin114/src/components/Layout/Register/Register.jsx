@@ -3,7 +3,7 @@ import {fetchToken, setProfileImage, setToken} from "Auth";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {API_ORIGIN} from 'components/APIRequest/APIRequest';
-import {ReactComponent as BunyangmonLogo} from 'assets/dragon_color.svg';
+import {ReactComponent as BunyangmonLogo} from 'images/dragon_color.svg';
 import {ReactComponent as PersonSVG} from 'images/person-svgrepo-com.svg';
 
 export default function Register() {
@@ -196,9 +196,10 @@ export default function Register() {
             {
                 fetchToken()
                     ? ("이미 로그인되어 있습니다")
-                    : (<> < div className = 'flex flex-col justify-center items-center w-1/3 h-1/5' >
-                         <BunyangmonLogo className='h-full'/>
-                    <p>분양몬</p>
+                    : (<> < div className = 'flex flex-col justify-center items-center w-3/4 lg:w-1/3 h-1/5' >
+                            {/* <BunyangmonLogo className='h-full'/> */}
+                            {/* <p>분양몬</p> */}
+                            <img className="self-center" src={require("images/logo.png")} alt='gogo'/>
                 </div>
 
                 <form className="grid grid-cols-2 gap-4">
@@ -313,7 +314,7 @@ export default function Register() {
 
                 <button
                     className='border border-[#D9D9D9] bg-[#D9D9D9] rounded-full px-20 py-2 \
-                text-white hover:border-[#FF8C32] hover:bg-[#FF8C32] transition-color ease-in-out duration-300'
+                text-white hover:border-pointColor hover:bg-pointColor transition-color ease-in-out duration-300'
                     onClick={register}>회원가입</button> </>
                     )
             }

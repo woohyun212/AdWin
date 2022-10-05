@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import database as db
 import models
-from routers import users, posts, comments, likes, auth
+from routers import users, posts, comments, likes, auth, news
 import utils
 from config import *
 
@@ -27,6 +27,7 @@ app.include_router(posts.router)
 app.include_router(comments.router)
 app.include_router(likes.router)
 app.include_router(auth.router)
+app.include_router(news.router)
 
 
 @app.get("/all_users", response_description="List all users",

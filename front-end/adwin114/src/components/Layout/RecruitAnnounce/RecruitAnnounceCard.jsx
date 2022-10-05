@@ -19,10 +19,12 @@ export default function RecruitAnnounceCard({
 }) {
     return (
         <Link to={post._id} className="flex flex-row justify-between h-[12.5%] w-full">
-            <span className="flex flex-col w-[12.5%] items-center justify-center h-full">
-                <p className="w-full whitespace-nowrap overflow-hidden text-ellipsis text-xs lg:text-base text-center">{post.area}</p>
+            <span className="flex flex-col w-[22.5%] items-center justify-center h-full">
+                <p className="font-bold w-full whitespace-nowrap overflow-hidden text-ellipsis text-xs lg:text-base text-center">{post.area}</p>
                 <hr className="border-black w-[75%]"/>
-                <p className="w-full whitespace-nowrap overflow-hidden text-ellipsis text-xs lg:text-base text-center">{changeRecruitTypeIdToValue(post.recruit_type)}</p>
+                <p className="font-bold w-full whitespace-nowrap overflow-hidden text-ellipsis text-xs lg:text-base text-center">{post.real_estate_type}</p>
+                <hr className="border-black w-[75%]"/>
+                <p className="font-bold w-full whitespace-nowrap overflow-hidden text-ellipsis text-xs lg:text-base text-center">{changeRecruitTypeIdToValue(post.recruit_type)}</p>
             </span>
             <div className="flex flex-col h-full w-[60%] content-start grow ml-[3%]">
                 <h4

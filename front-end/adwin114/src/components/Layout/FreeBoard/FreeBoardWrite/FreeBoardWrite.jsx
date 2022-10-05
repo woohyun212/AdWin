@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
-import ClassicEditor from 'ckeditor5/build/ckeditor';
+import Editor  from 'ckeditor5-custom-build/build/ckeditor';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_ORIGIN } from "components/APIRequest/APIRequest";
@@ -104,7 +104,7 @@ export default function FreeBoardWrite() {
                         {headers: {
                         Authorization: `Bearer ${fetchToken()}`
                     }}).then(function(result) {
-                        console.log(result);
+                        // console.log(result);
                         navigate(`/freeboard/${result.data._id}`); 
                       });
                 } catch (e) {
@@ -135,7 +135,7 @@ export default function FreeBoardWrite() {
                         <select
                         onChange={handleDropArea} 
                         className='flex mx-2 h-full justify-center items-center px-2 border-[#BBBBBB]
-                                    font-normal white-space-no-wrap text-gray-800 '>
+                                    font-normal whitespace-nowrap text-gray-800 '>
                         { AREA_DATA.map(el => { 
                             return <option key={el.id}>{el.value}</option>; }) }
                         </select>
@@ -145,7 +145,7 @@ export default function FreeBoardWrite() {
                         <select
                         onChange={handleDropRecruitType}
                         className='flex mx-1 h-full justify-center items-center px-2 border-[#BBBBBB] 
-                        font-normal white-space-no-wrap text-gray-800 '>{
+                        font-normal whitespace-nowrap text-gray-800 '>{
                         RECRUIT_TYPE_DATA.map(el => {
                                 return <option key={el.id}>{el.value}</option>;
                         })
@@ -164,7 +164,7 @@ export default function FreeBoardWrite() {
                     placeholder="제목을 입력하세요"
                     required="required"/>
                 </div>
-                <CKEditor editor={ClassicEditor}
+                <CKEditor editor={Editor }
                 placeholder="??"
                 data=""
                 onReady={editor => {
@@ -187,7 +187,7 @@ export default function FreeBoardWrite() {
                     editor.ui.view.editable.element.style.maxHeight = "500px";
                 }}/>
                 <div className='flex w-full justify-center mx-auto pb-52'>
-                <button type="button" className="m-1.5 w-20 bg-[#FF8C32]"
+                <button type="button" className="m-1.5 w-20 bg-pointColor"
                 onClick={handleSummbitButton}>제출</button>
                 <button type="button" className="m-1.5 w-20 bg-white border border-[#AAAAAA]"
                 onClick={handelCancleButton}>취소</button>

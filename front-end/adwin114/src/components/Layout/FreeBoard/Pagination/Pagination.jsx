@@ -57,7 +57,7 @@ export default function Pagination(
                         <button
                             onClick={() => changePage(currentPage - 1)}
                             className="relative inline-flex items-center rounded-l-md border border-r-transition border-gray-300 \
-                             bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:text-[#FF8C32] hover:bg-gray-200">
+                             bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:text-pointColor hover:bg-gray-200">
                             <span className="sr-only">Previous</span>
                             <ChevronLeftIcon className="h-5 w-5"/>
                         </button>
@@ -66,9 +66,9 @@ export default function Pagination(
                                 (page_number) => <button
                                     key={page_number}
                                     className={"relative inline-flex items-center border-y border-gray-300 bg-white  px-4 py-2" +
-                                            " text-sm font-medium hover:bg-gray-200 text-gray-500 hover:text-[#FF8C32] " + (
+                                            " text-sm font-medium hover:bg-gray-200 text-gray-500 hover:text-pointColor " + (
                                         page_number === currentPage
-                                            ? " text-[#FF8C32] border-[#FF8C32]"
+                                            ? " text-pointColor border-pointColor"
                                             : ""
                                     )}
                                     onClick={() => changePage(page_number)}>{page_number}
@@ -78,7 +78,7 @@ export default function Pagination(
                         <button
                             onClick={() => changePage(currentPage + 1)}
                             className="relative inline-flex items-center rounded-r-md border border-l-transparent border-gray-300 \
-                             bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:text-[#FF8C32] hover:bg-gray-200">
+                             bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:text-pointColor hover:bg-gray-200">
                             <span className="sr-only">Next</span>
                             <ChevronRightIcon className="h-5 w-5"/>
                         </button>

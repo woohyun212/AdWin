@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
-import ClassicEditor from 'ckeditor5/build/ckeditor';
+import Editor  from 'ckeditor5-custom-build/build/ckeditor';
 import { useNavigate, useParams } from 'react-router-dom';
 import { API_ORIGIN } from "components/APIRequest/APIRequest";
 import axios from 'axios';
@@ -18,11 +18,11 @@ const AREA_DATA = [
     ];
 const RECRUIT_TYPE_DATA = [
     { id: null, value: '모집 유형을 선택해주세요' },
-    { id: "SalesPerson", value: '직원' },
-    { id: "TeamLeader", value: '팀장' },
-    { id: "Director", value: '본부장' },
-    { id: "General", value: '총괄' },
-    { id: "Agency", value: '대행사' },
+    { id: 'SalesPerson', value: '직원' },
+    { id: 'TeamLeader', value: '팀장' },
+    { id: 'Director', value: '본부장' },
+    { id: 'General', value: '총괄' },
+    { id: 'Agency', value: '대행사' },
     ];
 
 function changeRecruitTypeValueToId (_value) {
@@ -151,7 +151,7 @@ export default function RecruitAnnounceUpdate() {
                         <select
                         onChange={handleDropArea} 
                         className='flex mx-2 h-full justify-center items-center px-2 border-[#BBBBBB]
-                                    font-normal white-space-no-wrap text-gray-800 '
+                                    font-normal whitespace-nowrap text-gray-800 '
                         value={selectedAreaValue}>
                         { AREA_DATA.map(el => { 
                             return <option key={el.id}>{el.value}</option>; }) }
@@ -162,7 +162,7 @@ export default function RecruitAnnounceUpdate() {
                         <select
                         onChange={handleDropRecruitType}
                         className='flex mx-1 h-full justify-center items-center px-2 border-[#BBBBBB] 
-                        font-normal white-space-no-wrap text-gray-800 '
+                        font-normal whitespace-nowrap text-gray-800 '
                         value={selectedRecruitTypeValue}>{
                         RECRUIT_TYPE_DATA.map(el => {
                                 return <option key={el.id}>{el.value}</option>;
@@ -183,7 +183,7 @@ export default function RecruitAnnounceUpdate() {
                     required="required"
                     defaultValue={title}/>
                 </div>
-                <CKEditor editor={ClassicEditor}
+                <CKEditor editor={Editor }
                 data={content}
                 onReady={editor => {
                     // You can store the "editor" and use when it is needed.
@@ -205,9 +205,9 @@ export default function RecruitAnnounceUpdate() {
                     editor.ui.view.editable.element.style.maxHeight = "500px";
                 }}/>
                 <div className='flex w-full justify-center mx-auto pb-52'>
-                <button type="button" className="m-1.5 w-20 bg-[#FF8C32]"
+                <button type="button" className="m-1.5 w-20 bg-pointColor"
                 onClick={handleSummbitButton}>제출</button>
-                <button type="button" className="m-1.5 w-20 bg-white border border-[#AAAAAA]"
+                <button type="button" className="m-1.5 w-20 bg-pointColor border border-[#AAAAAA]"
                 onClick={handelCancleButton}>취소</button>
             </div>
             </div>

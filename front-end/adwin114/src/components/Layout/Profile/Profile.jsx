@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {setToken, setProfileImage, fetchToken, fetchUserData, fetchProfileImage, CheckToken } from "Auth";
-import {ReactComponent as BunyangmonLogo} from 'assets/dragon_color.svg';
+import {ReactComponent as BunyangmonLogo} from 'images/dragon_color.svg';
 import {ReactComponent as PersonSVG} from 'images/person-svgrepo-com.svg';
 import axios from "axios";
 import {API_ORIGIN} from 'components/APIRequest/APIRequest';
@@ -241,7 +241,7 @@ export default function Profile() {
 
                 <button
                     className='border border-[#D9D9D9] bg-[#D9D9D9] rounded-full px-20 py-2 \
-                text-white hover:border-[#FF8C32] hover:bg-[#FF8C32] transition-color ease-in-out duration-300'
+                text-white hover:border-pointColor hover:bg-pointColor transition-color ease-in-out duration-300'
                     onClick={update}>정보 수정</button> </>
                     )
                     : ("로그인되어 있지 않습니다!")

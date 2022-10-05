@@ -97,9 +97,11 @@ export default function RecruitAnnounceDetail() {
 
     const OnDeletePostClick =  () => {
         if (fetchToken()){
-            if (postDetail.user_id !== fetchUserData()?._id) {
-                alert("작성자만 삭제할 수 있습니다.");
-                return;
+            if (!fetchUserData()?.is_admin) {    
+                if (postDetail.user_id !== fetchUserData()?._id) {
+                    alert("작성자만 삭제할 수 있습니다.");
+                    return;
+                }
             }
             const fetctDeletePost =  () => {
                 try {
@@ -140,7 +142,7 @@ export default function RecruitAnnounceDetail() {
                         </span>
                         <h1 className='flex sm:w-[35%] lg:w-[65%] text-[1.5rem] lg:text-3xl self-center text-left'>{postDetail.title}</h1>
                         <div className='flex flex-col md:flex-row justify-between gap-y-2 gap-x-4 '>
-                        <button type='button' onClick={onUpdatePostClick} className='self-center align-middle whitespace-nowrap bg-[#FF8C32] rounded-md border border-[#ff6f00] lg:px-4 lg:h-12 '>글 수정</button>
+                        <button type='button' onClick={onUpdatePostClick} className='self-center align-middle whitespace-nowrap bg-pointColor rounded-md border border-[#CCCCCC] lg:px-4 lg:h-12 '>글 수정</button>
                         <button type='button' onClick={OnDeletePostClick} className="self-center align-middle whitespace-nowrap bg-[#EEEEEE] rounded-md border border-[#CCCCCC] lg:px-4 lg:h-12 ">글 삭제</button>     
                         </div> 
                     </div>
