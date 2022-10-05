@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import Search from "./Search";
+// import Search from "./Search";
 import axios from "axios"
 import FreeBoardList from "./FreeBoardList";
 import Pagination from "./Pagination/Pagination";
